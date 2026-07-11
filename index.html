@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Adonay Tobar — Catalogo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <style>
         :root {
             --bg: #ffffff;
@@ -1468,10 +1470,36 @@
             <button class="sidebar-clear-all" id="carritoClearBtn" onclick="clearAllCarrito()" style="display:none">🗑
                 Borrar todo</button>
             <div class="sidebar-total"><span>Total:</span><span id="carritoTotal">$0.00</span></div>
+            <button class="sidebar-share" id="carritoPdfBtn" onclick="openPdfDataModal()"
+                style="background: #ef4444; margin-bottom: 8px;">📄 Generar Cotización PDF</button>
             <button class="sidebar-share" id="carritoShareBtn" onclick="shareCarritoWhatsApp()" disabled>Compartir por
                 WhatsApp</button>
         </div>
     </aside>
+
+    <!-- MODAL DATOS CLIENTE PARA PDF -->
+    <div class="modal-overlay" id="pdfDataModal" onclick="closePdfDataModal(event)">
+        <div class="modal" onclick="event.stopPropagation()"
+            style="max-height: auto; height: auto; padding: 24px 20px;">
+            <div class="modal-header">
+                <div class="modal-title">Datos de la Cotización</div>
+                <button class="modal-close" onclick="closePdfDataModal()">&#10005;</button>
+            </div>
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Nombre
+                    del Cliente</label>
+                <input type="text" id="pdfClienteNombre" placeholder="Ej: JOSE ARNULFO MARTINEZ FLORES"
+                    style="width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Asesor
+                    de Ventas</label>
+                <input type="text" id="pdfAsesorNombre" value="Tobar Josue Adonay"
+                    style="width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none;">
+            </div>
+            <button class="modal-confirm-btn" onclick="generarCotizacionPDF()">Generar Cotización PDF</button>
+        </div>
+    </div>
 
     <script>
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8XYpMQEshg2eZghit9nFFjIiRz8_G_PHnlOlYWmsX9kzrN1CH7v_FQE0ciZnU8Va4AZofLfJvm4KF/pub?output=csv';
@@ -2693,11 +2721,8 @@
                 const isQty = !isMeters;
 
                 msg += (i + 1) + '. *' + (item.code || 'SIN CODIGO') + '* — ' + (item.description || 'Sin descripcion') + '\n';
-                if (item.discount > 0) {
-                    msg += '   ~~' + formatPrice(item.originalPrice) + '~~ → *' + formatPrice(item.unitPrice) + '* (-' + item.discount + '%)\n';
-                } else {
-                    msg += '   *' + formatPrice(item.unitPrice) + '*\n';
-                }
+                // Solo muestra el precio final, sin descuento ni precio original
+                msg += '   *' + formatPrice(item.unitPrice) + '*\n';
                 if (isMeters) {
                     msg += '   ' + item.meters + ' metros = *' + formatPrice(item.finalPrice) + '*\n';
                 } else if (isQty) {
@@ -2769,6 +2794,310 @@
         }
 
         setInterval(loadProducts, 5 * 60 * 1000);
+
+
+        // ============== PDF COTIZACION ==============
+
+        function openPdfDataModal() {
+            if (!carrito.length) {
+                showToast('El carrito está vacío', 'warning');
+                return;
+            }
+            document.getElementById('pdfDataModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Guardar referencia del sidebar abierto para cerrarlo después
+            pdfSidebarWasOpen = openSidebarType;
+        }
+
+        function closePdfDataModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            document.getElementById('pdfDataModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        let pdfSidebarWasOpen = null;
+
+        async function generarCotizacionPDF() {
+            const cliente = document.getElementById('pdfClienteNombre').value.trim();
+            const asesor = document.getElementById('pdfAsesorNombre').value.trim();
+
+            if (!cliente) {
+                showToast('Ingresa el nombre del cliente', 'warning');
+                return;
+            }
+
+            closePdfDataModal();
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'mm', format: 'letter' }); // 216 x 279 mm
+
+            const pageW = doc.internal.pageSize.getWidth(); // 216
+            const pageH = doc.internal.pageSize.getHeight(); // 279
+            const margin = 15;
+
+            // ===== LOGO =====
+            try {
+                const logoImg = await loadImage('https://files.kimi.moonshot.cn/upload/image/1749603485420-3f8c9e5c-1f5e-4c5e-8b5e-9c8e5c5e5c5e.png');
+                const logoW = 55;
+                const logoH = (logoImg.height / logoImg.width) * logoW;
+                doc.addImage(logoImg.data, 'PNG', margin, 10, logoW, logoH);
+            } catch (e) {
+                // Fallback texto si no carga el logo
+                doc.setFontSize(22);
+                doc.setTextColor(220, 20, 20);
+                doc.setFont('helvetica', 'bold');
+                doc.text('GALVANISSA', margin, 20);
+                doc.setFontSize(9);
+                doc.setTextColor(0, 0, 0);
+                doc.text('#1 en hierro y techos', margin, 25);
+            }
+
+            // ===== DATOS EMPRESA (centro-derecha) =====
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(60, 60, 60);
+            const empresaY = 12;
+            const empresaX = 85;
+            doc.text('GALVANIS, S.A. DE C.V.', empresaX, empresaY);
+            doc.text('CANTON AGUA ZARCA, CARRETERA A CABANAS', empresaX, empresaY + 4);
+            doc.text('PBX: 6957-8479', empresaX, empresaY + 8);
+            doc.text('EMAIL: slb.gerencia@galvanissa.com', empresaX, empresaY + 12);
+            doc.text('www.galvanissa.com', empresaX, empresaY + 16);
+
+            // ===== GIRO =====
+            doc.setFontSize(8);
+            doc.setTextColor(80, 80, 80);
+            doc.text('GIRO:', empresaX, empresaY + 22);
+            doc.text('FABRICACION DE PRODUCTOS METALICOS', empresaX, empresaY + 26);
+            doc.text('PARA USO ESTRUCTURAL', empresaX, empresaY + 30);
+
+            // ===== CAJA COTIZACION =====
+            const cajaX = 155;
+            const cajaY = 10;
+            const cajaW = 50;
+            const cajaH = 28;
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.5);
+            doc.roundedRect(cajaX, cajaY, cajaW, cajaH, 3, 3);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text('COTIZACION', cajaX + cajaW / 2, cajaY + 8, { align: 'center' });
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            const numCotiz = 'No. ' + generarNumeroCotizacion();
+            doc.text(numCotiz, cajaX + cajaW / 2, cajaY + 18, { align: 'center' });
+
+            // ===== TEXTO ADVERTENCIA (arriba de todo) =====
+            const advY = 48;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(180, 0, 0);
+            doc.text('COTIZACION CON PRECIOS APROXIMADOS, TOTAL FINAL PUEDE VARIAR EN TIENDA', margin, advY);
+            doc.setTextColor(0, 0, 0);
+
+            // ===== DATOS CLIENTE / FECHA =====
+            const datosY = 56;
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text('Codigo / Cliente:', margin, datosY);
+            doc.setFont('helvetica', 'normal');
+            doc.text(cliente, margin + 35, datosY);
+
+            doc.setFont('helvetica', 'bold');
+            doc.text('Condicion de Pago:', margin, datosY + 6);
+            doc.setFont('helvetica', 'normal');
+            doc.text('EFECTIVO', margin + 35, datosY + 6);
+
+            doc.setFont('helvetica', 'bold');
+            doc.text('Fecha:', 140, datosY);
+            doc.setFont('helvetica', 'normal');
+            const fechaHoy = new Date().toLocaleDateString('es-SV', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            doc.text(fechaHoy, 155, datosY);
+
+            doc.setFont('helvetica', 'bold');
+            doc.text('Asesor de Ventas:', 140, datosY + 6);
+            doc.setFont('helvetica', 'normal');
+            doc.text(asesor, 170, datosY + 6);
+
+            // ===== TABLA DE PRODUCTOS =====
+            const tablaY = 70;
+
+            const tableData = carrito.map(function (item) {
+                const code = item.code || '';
+                const isMeters = code.startsWith('12');
+                const cantidad = isMeters ? item.meters : item.qty;
+                const unidad = isMeters ? 'MT' : 'UN';
+                const precioUnit = item.unitPrice;
+                const subtotal = item.finalPrice;
+                return [
+                    cantidad.toString(),
+                    unidad,
+                    code,
+                    item.description || 'Sin descripcion',
+                    formatPrice(precioUnit).replace('$', 'US$ '),
+                    formatPrice(subtotal).replace('$', 'US$ ')
+                ];
+            });
+
+            const subtotalGeneral = carrito.reduce(function (s, i) { return s + i.finalPrice; }, 0);
+            const retencion = 0;
+            const totalFinal = subtotalGeneral - retencion;
+
+            doc.autoTable({
+                startY: tablaY,
+                margin: { left: 10, right: 10 },
+                head: [['CANTIDAD', 'UNIDAD', 'CODIGO', 'DESCRIPCION', 'PRECIO UNIT', 'SUBTOTAL']],
+                body: tableData,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [255, 255, 255],
+                    textColor: [0, 0, 0],
+                    fontStyle: 'bold',
+                    fontSize: 8,
+                    halign: 'center',
+                    valign: 'middle',
+                    lineWidth: 0.3
+                },
+                bodyStyles: {
+                    fontSize: 8,
+                    textColor: [0, 0, 0],
+                    valign: 'middle',
+                    lineWidth: 0.3
+                },
+                columnStyles: {
+                    0: { halign: 'center', cellWidth: 16 },
+                    1: { halign: 'center', cellWidth: 12 },
+                    2: { halign: 'left', cellWidth: 20 },
+                    3: { halign: 'left', cellWidth: 'auto' },
+                    4: { halign: 'right', cellWidth: 24 },
+                    5: { halign: 'right', cellWidth: 28 }
+                },
+                styles: {
+                    font: 'helvetica',
+                    lineColor: [0, 0, 0],
+                    lineWidth: 0.3,
+                    cellPadding: 2
+                }
+            });
+
+            const finalY = doc.lastAutoTable.finalY + 5;
+
+            // ===== TOTALES (alineado con la tabla) =====
+            const tablaRight = 206; // Borde derecho de la tabla (216 - 10 margen)
+            const totalesW = 55;      // Ancho del bloque de totales
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.text('TOTAL', tablaRight - totalesW, finalY);
+            doc.setFont('helvetica', 'normal');
+            doc.text('US$ ' + formatPrice(subtotalGeneral).replace('$', ''), tablaRight, finalY, { align: 'right' });
+
+            doc.setFont('helvetica', 'bold');
+            doc.text('RETENCION', tablaRight - totalesW, finalY + 6);
+            doc.setFont('helvetica', 'normal');
+            doc.text('US$ ' + formatPrice(retencion).replace('$', ''), tablaRight, finalY + 6, { align: 'right' });
+
+            // Línea separadora
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.5);
+            doc.line(tablaRight - totalesW, finalY + 9, tablaRight, finalY + 9);
+
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.text('TOTAL', tablaRight - totalesW, finalY + 16);
+            doc.text('US$ ' + formatPrice(totalFinal).replace('$', ''), tablaRight, finalY + 16, { align: 'right' });
+
+            // ===== CONDICIONES =====
+            const condY = finalY + 30;
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            doc.text('CONDICIONES DE OFERTA:', margin, condY);
+            doc.setFont('helvetica', 'normal');
+            doc.text('FAVOR EMITIR CHEQUE A NOMBRE DE GALVANIS, S.A. DE C.V.', margin, condY + 5);
+            doc.text('ESTE FORMATO NO SUSTITUYE A DOCUMENTOS DE FACTURACION LEGAL', margin, condY + 10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('PRECIOS SUJETOS A CAMBIO SIN PREVIO AVISO', pageW / 2, condY + 18, { align: 'center' });
+
+            // ===== FIRMAS =====
+            const firmasY = condY + 32;
+            const firmaW = 55;
+            const espacio = (pageW - 20 - firmaW * 3) / 2;
+
+            // Líneas de firma
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.3);
+            doc.line(10, firmasY, 10 + firmaW, firmasY);
+            doc.line(10 + firmaW + espacio, firmasY, 10 + firmaW * 2 + espacio, firmasY);
+            doc.line(10 + firmaW * 2 + espacio * 2, firmasY, 10 + firmaW * 3 + espacio * 2, firmasY);
+
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Asesor de Ventas', 10 + firmaW / 2, firmasY + 5, { align: 'center' });
+            doc.text('Aceptado Cliente', 10 + firmaW + espacio + firmaW / 2, firmasY + 5, { align: 'center' });
+            doc.text('Autorizado', 10 + firmaW * 2 + espacio * 2 + firmaW / 2, firmasY + 5, { align: 'center' });
+
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Asesor de Ventas', margin + firmaW / 2, firmasY + 5, { align: 'center' });
+            doc.text('Aceptado Cliente', margin + firmaW + espacio + firmaW / 2, firmasY + 5, { align: 'center' });
+            doc.text('Autorizado', margin + firmaW * 2 + espacio * 2 + firmaW / 2, firmasY + 5, { align: 'center' });
+
+            // ===== MARCA DE AGUA =====
+            doc.setTextColor(200, 200, 200);
+            doc.setFontSize(40);
+            doc.setFont('helvetica', 'bold');
+            doc.saveGraphicsState();
+            doc.setGState(new doc.GState({ opacity: 0.12 }));
+            doc.text('DOCUMENTO NO VALIDO\nPARA EFECTOS FISCALES', pageW / 2, pageH / 2, {
+                align: 'center',
+                angle: 30
+            });
+            doc.restoreGraphicsState();
+
+            // Guardar
+            doc.save('Cotizacion_' + cliente.replace(/\s+/g, '_') + '_' + fechaHoy.replace(/\//g, '-') + '.pdf');
+            showToast('Cotización PDF generada', 'success');
+
+            // Cerrar sidebar si estaba abierto
+            if (pdfSidebarWasOpen) {
+                closeSidebar(pdfSidebarWasOpen);
+                pdfSidebarWasOpen = null;
+            }
+        }
+
+        function generarNumeroCotizacion() {
+            const now = new Date();
+            const yy = String(now.getFullYear()).slice(-2);
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mn = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            return yy + mm + dd + hh + mn + ss;
+        }
+
+        function loadImage(url) {
+            return new Promise(function (resolve, reject) {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    resolve({
+                        data: canvas.toDataURL('image/png'),
+                        width: img.width,
+                        height: img.height
+                    });
+                };
+                img.onerror = reject;
+                img.src = url;
+            });
+        }
     </script>
 </body>
 
