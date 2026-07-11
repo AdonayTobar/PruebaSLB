@@ -8,18 +8,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         :root {
-            --bg: #0f0f11;
-            --surface: #1a1a1e;
-            --surface-hover: #222228;
-            --border: #2a2a30;
-            --text: #f0f0f5;
-            --text-secondary: #a0a0b0;
-            --text-muted: #606070;
-            --accent: #e8e8f0;
-            --accent-bg: #2a2a35;
-            --success: #4ade80;
-            --danger: #f87171;
-            --warning: #fbbf24;
+            --bg: #ffffff;
+            --surface: #f7f7f8;
+            --surface-hover: #ededf0;
+            --border: #e0e0e5;
+            --text: #1a1a2e;
+            --text-secondary: #555566;
+            --text-muted: #8888a0;
+            --accent: #2a2a3e;
+            --accent-bg: #eeeef5;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --radius: 12px;
             --radius-sm: 8px;
         }
@@ -60,7 +60,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(15, 15, 17, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             padding: 12px 14px;
@@ -278,23 +278,23 @@
         .btn-action.lista {
             background: transparent;
             color: var(--warning);
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            border: 1px solid rgba(245, 158, 11, 0.35);
         }
 
         .btn-action.lista.added {
-            background: rgba(251, 191, 36, 0.12);
-            border-color: rgba(251, 191, 36, 0.5);
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.5);
         }
 
         .btn-action.carrito {
             background: transparent;
             color: var(--success);
-            border: 1px solid rgba(74, 222, 128, 0.3);
+            border: 1px solid rgba(34, 197, 94, 0.35);
         }
 
         .btn-action.carrito.added {
-            background: rgba(74, 222, 128, 0.12);
-            border-color: rgba(74, 222, 128, 0.5);
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.5);
         }
 
         /* NO RESULTS */
@@ -310,9 +310,9 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            color: #f0f0f5;
             padding: 12px 20px;
             border-radius: var(--radius-sm);
             font-size: 0.85rem;
@@ -323,6 +323,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
         }
 
         .toast.show {
@@ -429,7 +430,7 @@
 
         .discounts-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 2fr);
             gap: 8px;
         }
 
@@ -491,7 +492,7 @@
 
         .discount-option.selected {
             border-color: var(--success);
-            background: rgba(74, 222, 128, 0.08);
+            background: rgba(34, 197, 94, 0.08);
         }
 
         .discount-option .opt-label {
@@ -874,6 +875,34 @@
             background: var(--surface-hover);
         }
 
+        /* CLEAR ALL BUTTON */
+        .sidebar-clear-all {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--danger);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--danger);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .sidebar-clear-all:hover {
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .sidebar-clear-all:active {
+            background: rgba(239, 68, 68, 0.15);
+            transform: scale(0.98);
+        }
+
         @media (min-width: 640px) {
             .header {
                 padding: 14px 24px;
@@ -892,7 +921,325 @@
                 margin: auto 16px;
                 max-height: 90vh;
                 height: auto;
+                max-width: 50rem;
             }
+        }
+
+        /* DESKTOP TABLE LAYOUT */
+        @media (min-width: 768px) {
+            .header {
+                padding: 14px 40px;
+            }
+
+            .search-section {
+                padding: 16px 40px 10px;
+                max-width: 600px;
+            }
+
+            .product-list {
+                padding: 0 40px 32px;
+            }
+
+            /* Table header */
+            .product-list::before {
+                content: '';
+                display: block;
+                padding: 10px 16px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .product-card {
+                display: grid;
+                grid-template-columns: 140px 1fr auto auto;
+                grid-template-rows: auto;
+                align-items: center;
+                gap: 16px;
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--border);
+                border-left: 1px solid var(--border);
+                border-right: 1px solid var(--border);
+                border-top: none;
+                background: var(--bg);
+                border-radius: 0;
+            }
+
+            .product-card:first-child {
+                border-top: 1px solid var(--border);
+            }
+
+            .product-card:last-child {
+                border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            }
+
+            .product-card:hover {
+                background: var(--surface);
+            }
+
+            .product-top {
+                display: contents;
+            }
+
+            .product-code {
+                font-size: 0.8rem;
+                justify-self: start;
+            }
+
+            .product-desc {
+                font-size: 0.88rem;
+                -webkit-line-clamp: 1;
+                margin-bottom: 0;
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .product-price {
+                font-size: 1rem;
+                grid-column: 3;
+                grid-row: 1;
+                text-align: right;
+                min-width: 90px;
+            }
+
+            .product-actions {
+                margin-top: 0;
+                gap: 8px;
+                grid-column: 4;
+                grid-row: 1;
+                min-width: 180px;
+                justify-content: flex-end;
+            }
+
+            .btn-action {
+                flex: 0 0 auto;
+                padding: 7px 16px;
+                font-size: 0.78rem;
+            }
+
+            .sidebar {
+                max-width: 440px;
+                box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .header {
+                padding: 14px 60px;
+            }
+
+            .search-section {
+                padding: 20px 60px 12px;
+                max-width: 700px;
+            }
+
+            .product-list {
+                margin: 0 auto;
+                padding: 0 60px 40px;
+                max-width: 70rem;
+            }
+
+            .product-card {
+                grid-template-columns: 160px 1fr auto auto;
+                padding: 14px 20px;
+                gap: 24px;
+            }
+
+            .product-actions {
+                min-width: 200px;
+            }
+        }
+
+        /* METERS MODE SELECTOR */
+        .meters-mode-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .meters-mode-btn {
+            flex: 1;
+            padding: 10px 8px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+        }
+
+        .meters-mode-btn:active {
+            transform: scale(0.97);
+        }
+
+        .meters-mode-btn.active {
+            border-color: var(--success);
+            color: var(--text);
+            background: rgba(34, 197, 94, 0.06);
+        }
+
+        /* PIECES TABLE */
+        .pieces-container {
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            scrollbar-width: thin;
+        }
+
+        .pieces-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .pieces-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .pieces-table th {
+            background: var(--surface);
+            padding: 8px 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pieces-table th:last-child {
+            text-align: center;
+            width: 40px;
+        }
+
+        .pieces-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .pieces-table td:last-child {
+            text-align: center;
+        }
+
+        .pieces-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pieces-table input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.85rem;
+            text-align: center;
+            outline: none;
+            -moz-appearance: textfield;
+        }
+
+        .pieces-table input:focus {
+            border-color: var(--success);
+        }
+
+        .pieces-table input::-webkit-outer-spin-button,
+        .pieces-table input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .piece-remove-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            color: var(--danger);
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            margin: 0 auto;
+        }
+
+        .piece-remove-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .piece-row-num {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* FLOATING ADD BUTTON */
+        .pieces-add-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--success);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s;
+            margin-bottom: 12px;
+        }
+
+        .pieces-add-btn:hover {
+            background: rgba(34, 197, 94, 0.05);
+            border-color: var(--success);
+        }
+
+        .pieces-add-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* PIECES SUMMARY */
+        .pieces-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--accent-bg);
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+        }
+
+        .pieces-summary-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .pieces-summary-label strong {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .pieces-summary-total {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--success);
         }
     </style>
     <base target="_blank">
@@ -1035,13 +1382,49 @@
 
             <!-- SECCION METROS (solo visible para codigos que empiezan con 12) -->
             <div class="quantity-section" id="metersSection" style="display:none">
-                <div class="quantity-label">Metros:</div>
-                <div class="quantity-input-wrapper" style="border:none; background:transparent;">
-                    <input type="number" class="qty-input" id="metersInput" value="1" min="0.01" step="0.01"
-                        oninput="updateMetersSubtotal()"
-                        style="width:100%; border:1.5px solid var(--border); border-radius:var(--radius-sm);">
+                <div class="quantity-label">¿Cómo ingresar metros?</div>
+                <div class="meters-mode-selector">
+                    <button class="meters-mode-btn active" id="metersModeTotal" onclick="setMetersMode('total')">📏
+                        Total directo</button>
+                    <button class="meters-mode-btn" id="metersModeDetail" onclick="setMetersMode('detail')">📋 Medida
+                        por medida</button>
                 </div>
-                <div class="qty-unit">metros (ej: 144.98, 300.89)</div>
+
+                <!-- MODO TOTAL DIRECTO -->
+                <div id="metersTotalSection">
+                    <div class="quantity-input-wrapper" style="border:none; background:transparent;">
+                        <input type="number" class="qty-input" id="metersInput" value="1" min="0.01" step="0.01"
+                            oninput="updateMetersSubtotal()"
+                            style="width:100%; border:1.5px solid var(--border); border-radius:var(--radius-sm);">
+                    </div>
+                    <div class="qty-unit">metros (ej: 144.98, 300.89)</div>
+                </div>
+
+                <!-- MODO MEDIDA POR MEDIDA -->
+                <div id="metersDetailSection" style="display:none">
+                    <div class="pieces-container" id="piecesContainer">
+                        <table class="pieces-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Piezas</th>
+                                    <th>Medida (m)</th>
+                                    <th>Sub</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="piecesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="pieces-add-btn" onclick="addPieceRow()">+ Agregar medida</button>
+                    <div class="pieces-summary">
+                        <div class="pieces-summary-label">Total: <strong id="piecesTotalMeters">0.00</strong> metros
+                            (<span id="piecesCount">0</span> filas)</div>
+                        <div class="pieces-summary-total" id="piecesSubtotalPrice">$0.00</div>
+                    </div>
+                </div>
+
                 <div class="qty-subtotal">
                     <div class="qty-subtotal-label">Subtotal</div>
                     <div class="qty-subtotal-price" id="metersSubtotal">$0.00</div>
@@ -1062,6 +1445,8 @@
             <div class="sidebar-empty">Tu lista esta vacia</div>
         </div>
         <div class="sidebar-footer">
+            <button class="sidebar-clear-all" id="listaClearBtn" onclick="clearAllLista()" style="display:none">🗑
+                Borrar todo</button>
             <button class="sidebar-copy" id="listaCopyBtn" onclick="copyListaToClipboard()">Copiar lista al
                 portapapeles</button>
             <div class="sidebar-total"><span>Total:</span><span id="listaTotal">$0.00</span></div>
@@ -1080,6 +1465,8 @@
             <div class="sidebar-empty">Tu carrito esta vacio</div>
         </div>
         <div class="sidebar-footer">
+            <button class="sidebar-clear-all" id="carritoClearBtn" onclick="clearAllCarrito()" style="display:none">🗑
+                Borrar todo</button>
             <div class="sidebar-total"><span>Total:</span><span id="carritoTotal">$0.00</span></div>
             <button class="sidebar-share" id="carritoShareBtn" onclick="shareCarritoWhatsApp()" disabled>Compartir por
                 WhatsApp</button>
@@ -1088,6 +1475,14 @@
 
     <script>
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8XYpMQEshg2eZghit9nFFjIiRz8_G_PHnlOlYWmsX9kzrN1CH7v_FQE0ciZnU8Va4AZofLfJvm4KF/pub?output=csv';
+
+        // Productos de ejemplo en caso de error con Google Sheets
+        const FALLBACK_PRODUCTS = [
+            { id: 9001, code: '1201-001', description: 'LAMINA GALVANIZADA LISA 4x8 C26 GHT', price: 185.50, category: 'Laminas' },
+            { id: 9002, code: '0501-010', description: 'TUBO CUADRADO 1" CH18 GHT 6.0 MTS', price: 95.00, category: 'Tubos' },
+            { id: 9003, code: '1202-005', description: 'LAMINA ZINC CORRUGADA 12 PIES C26 GHT', price: 220.75, category: 'Laminas' },
+            { id: 9004, code: '0301-020', description: 'POLIN C 4x2 CH16 GHT 6.0 MTS', price: 310.00, category: 'Polines' }
+        ];
 
         let allProducts = [];
         let filteredProducts = [];
@@ -1099,6 +1494,8 @@
         let currentQty = 1;
         let currentMeters = 1;
         let editingIndex = -1;
+        let currentMetersMode = 'total'; // 'total' or 'detail'
+        let currentPieces = []; // array of {qty, measure} for piece-by-piece mode
 
         function formatPrice(n) {
             const num = typeof n === 'number' ? n : parseFloat(String(n).replace(/[$,]/g, '').trim());
@@ -1177,12 +1574,20 @@
                 });
             } catch (err) {
                 console.error('Error cargando productos:', err);
-                document.getElementById('productList').innerHTML = `
-      <div class="no-results">
-        <p style="color:var(--danger);margin-bottom:8px">Error al cargar</p>
-        <p style="font-size:0.85rem">${err.message}</p>
-        <button onclick="loadProducts()" style="margin-top:16px;padding:10px 20px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;cursor:pointer">Reintentar</button>
-      </div>`;
+                // Usar productos de ejemplo como fallback
+                if (allProducts.length === 0) {
+                    console.warn('Usando productos de ejemplo como fallback');
+                    allProducts = FALLBACK_PRODUCTS.slice();
+                    filteredProducts = allProducts.slice();
+                    renderProducts();
+                    updateListaUI();
+                    updateCarritoUI();
+                    document.getElementById('lastUpdate').textContent = '⚠ Modo ejemplo (sin conexión)';
+                    showToast('Sin conexión: mostrando productos de ejemplo', 'warning');
+                } else {
+                    // Ya tiene productos cargados, solo avisar
+                    showToast('Error actualizando: usando datos anteriores', 'warning');
+                }
             }
         }
 
@@ -1259,7 +1664,7 @@
         }
 
         var SEARCH_SYNONYMS = {
-            'polin': ['polin', 'polin c', 'polin encaj', 'viga', 'viga encaj', 'polin ght', 'polin gfx'],
+            'polin': ['polin', 'polin c', 'polin encaj', 'viga', 'viga encaj', 'polin ght', 'polin gfx', '4x2'],
             'viga': ['viga', 'viga encaj', 'polin encaj', 'polin', 'viga ght'],
             'tubo': ['tubo', 'tubo est', 'tubo ind', 'tubo ght', 'tubo gfx', 'tubo hrc', 'tubo crc'],
             'angulo': ['angulo', 'angulo ght', 'angulo g36'],
@@ -1763,7 +2168,8 @@
             const isMeters = code.startsWith('12');
 
             document.getElementById('discountModalTitle').textContent = 'Agregar al Carrito';
-            setupModalContent(p, isMeters, 0, 1, 1);
+            currentPieces = [];
+            setupModalContent(p, isMeters, 0, 1, 1, null);
 
             document.getElementById('discountModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1787,7 +2193,8 @@
             const isMeters = code.startsWith('12');
 
             document.getElementById('discountModalTitle').textContent = 'Editar Carrito';
-            setupModalContent(p, isMeters, item.discount, item.qty || 1, item.meters || 1);
+            currentPieces = item.pieces ? item.pieces.slice() : [];
+            setupModalContent(p, isMeters, item.discount, item.qty || 1, item.meters || 1, item.pieces || null);
 
             document.getElementById('discountModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1858,7 +2265,7 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function setupModalContent(p, isMeters, discount, qty, meters) {
+        function setupModalContent(p, isMeters, discount, qty, meters, pieces) {
             document.getElementById('discountModalCodeText').textContent = p.code || 'SIN CODIGO';
             document.getElementById('discountModalDesc').textContent = p.description || 'Sin descripcion';
             document.getElementById('optPrice0').textContent = formatPrice(p.price);
@@ -1880,8 +2287,20 @@
                 updateQtySubtotal();
             }
             if (isMeters) {
-                currentMeters = meters;
-                document.getElementById('metersInput').value = meters;
+                // Determine mode from existing data
+                if (pieces && pieces.length > 0) {
+                    currentPieces = pieces.map(function (pc) { return { qty: pc.qty, measure: pc.measure }; });
+                    currentMetersMode = 'detail';
+                    setMetersMode('detail');
+                    renderPiecesTable();
+                    recalcPiecesTotal();
+                } else {
+                    currentPieces = [];
+                    currentMetersMode = 'total';
+                    setMetersMode('total');
+                    currentMeters = meters;
+                    document.getElementById('metersInput').value = meters;
+                }
                 updateMetersSubtotal();
             }
         }
@@ -1914,15 +2333,113 @@
         }
 
         function updateMetersSubtotal() {
-            const input = document.getElementById('metersInput');
-            let val = parseFloat(input.value) || 0;
-            if (val <= 0) val = 0.01;
-            currentMeters = val;
-            input.value = val;
+            if (currentMetersMode === 'total') {
+                const input = document.getElementById('metersInput');
+                let val = parseFloat(input.value) || 0;
+                if (val <= 0) val = 0.01;
+                currentMeters = val;
+                input.value = val;
+            }
+            // In detail mode, currentMeters is set by recalcPiecesTotal
 
             if (currentDiscountProduct) {
                 const unitPrice = currentDiscountProduct.price * (1 - selectedDiscount / 100);
                 document.getElementById('metersSubtotal').textContent = formatPrice(unitPrice * currentMeters);
+            }
+        }
+
+        // ====== METERS MODE FUNCTIONS ======
+        function setMetersMode(mode) {
+            currentMetersMode = mode;
+            document.getElementById('metersModeTotal').classList.toggle('active', mode === 'total');
+            document.getElementById('metersModeDetail').classList.toggle('active', mode === 'detail');
+            document.getElementById('metersTotalSection').style.display = mode === 'total' ? 'block' : 'none';
+            document.getElementById('metersDetailSection').style.display = mode === 'detail' ? 'block' : 'none';
+
+            if (mode === 'detail') {
+                if (currentPieces.length === 0) {
+                    addPieceRow();
+                }
+                renderPiecesTable();
+                recalcPiecesTotal();
+            } else {
+                // Switching to total: if we had pieces, sum them as starting value
+                if (currentPieces.length > 0) {
+                    var total = 0;
+                    currentPieces.forEach(function (pc) { total += (pc.qty || 1) * (pc.measure || 0); });
+                    if (total > 0) {
+                        currentMeters = Math.round(total * 100) / 100;
+                        document.getElementById('metersInput').value = currentMeters;
+                    }
+                }
+                updateMetersSubtotal();
+            }
+        }
+
+        function addPieceRow() {
+            currentPieces.push({ qty: 1, measure: 0 });
+            renderPiecesTable();
+            recalcPiecesTotal();
+            // Scroll to bottom and focus the new measure input
+            var container = document.getElementById('piecesContainer');
+            setTimeout(function () {
+                container.scrollTop = container.scrollHeight;
+                var inputs = container.querySelectorAll('input[data-field="measure"]');
+                if (inputs.length > 0) inputs[inputs.length - 1].focus();
+            }, 50);
+        }
+
+        function removePieceRow(index) {
+            currentPieces.splice(index, 1);
+            renderPiecesTable();
+            recalcPiecesTotal();
+        }
+
+        function updatePieceValue(index, field, value) {
+            if (field === 'qty') {
+                currentPieces[index].qty = Math.max(1, parseInt(value) || 1);
+            } else {
+                currentPieces[index].measure = Math.max(0, parseFloat(value) || 0);
+            }
+            recalcPiecesTotal();
+            // Update the subtotal cell for this row
+            var sub = (currentPieces[index].qty || 1) * (currentPieces[index].measure || 0);
+            var subCell = document.getElementById('pieceRowSub_' + index);
+            if (subCell) subCell.textContent = sub > 0 ? sub.toFixed(2) : '-';
+        }
+
+        function renderPiecesTable() {
+            var tbody = document.getElementById('piecesTableBody');
+            tbody.innerHTML = currentPieces.map(function (pc, i) {
+                var sub = (pc.qty || 1) * (pc.measure || 0);
+                return '<tr>' +
+                    '<td class="piece-row-num">' + (i + 1) + '</td>' +
+                    '<td><input type="number" value="' + (pc.qty || 1) + '" min="1" data-field="qty" onchange="updatePieceValue(' + i + ', \'qty\', this.value)" oninput="updatePieceValue(' + i + ', \'qty\', this.value)"></td>' +
+                    '<td><input type="number" value="' + (pc.measure || '') + '" min="0" step="0.01" data-field="measure" placeholder="0.00" onchange="updatePieceValue(' + i + ', \'measure\', this.value)" oninput="updatePieceValue(' + i + ', \'measure\', this.value)"></td>' +
+                    '<td id="pieceRowSub_' + i + '" style="font-size:0.78rem;color:var(--text-muted)">' + (sub > 0 ? sub.toFixed(2) : '-') + '</td>' +
+                    '<td><button class="piece-remove-btn" onclick="removePieceRow(' + i + ')" title="Eliminar">✕</button></td>' +
+                    '</tr>';
+            }).join('');
+        }
+
+        function recalcPiecesTotal() {
+            var totalMeters = 0;
+            var totalPieces = 0;
+            currentPieces.forEach(function (pc) {
+                var sub = (pc.qty || 1) * (pc.measure || 0);
+                totalMeters += sub;
+                totalPieces++;
+            });
+            totalMeters = Math.round(totalMeters * 100) / 100;
+            currentMeters = totalMeters;
+
+            document.getElementById('piecesTotalMeters').textContent = totalMeters.toFixed(2);
+            document.getElementById('piecesCount').textContent = totalPieces;
+
+            if (currentDiscountProduct) {
+                var unitPrice = currentDiscountProduct.price * (1 - selectedDiscount / 100);
+                document.getElementById('piecesSubtotalPrice').textContent = formatPrice(unitPrice * totalMeters);
+                document.getElementById('metersSubtotal').textContent = formatPrice(unitPrice * totalMeters);
             }
         }
 
@@ -1936,6 +2453,7 @@
             let finalPrice = unitPrice;
             let qty = 1;
             let meters = null;
+            let pieces = null;
 
             if (currentMode === 'lista') {
                 qty = 1;
@@ -1949,6 +2467,12 @@
                     meters = currentMeters;
                     finalPrice = unitPrice * meters;
                     qty = meters;
+                    // Save pieces if in detail mode
+                    if (currentMetersMode === 'detail' && currentPieces.length > 0) {
+                        pieces = currentPieces.filter(function (pc) { return pc.measure > 0; }).map(function (pc) {
+                            return { qty: pc.qty, measure: pc.measure };
+                        });
+                    }
                 }
             }
 
@@ -1956,7 +2480,7 @@
                 id: p.id, code: p.code, description: p.description,
                 originalPrice: p.price, discount: selectedDiscount,
                 unitPrice: unitPrice, finalPrice: finalPrice,
-                qty: qty, meters: meters
+                qty: qty, meters: meters, pieces: pieces
             };
 
             if (currentMode === 'lista') {
@@ -1989,6 +2513,8 @@
             currentMode = 'carrito';
             currentQty = 1;
             currentMeters = 1;
+            currentPieces = [];
+            currentMetersMode = 'total';
             editingIndex = -1;
         }
 
@@ -2001,6 +2527,7 @@
                 items.innerHTML = '<div class="sidebar-empty">Tu lista esta vacia</div>';
                 document.getElementById('listaShareBtn').disabled = true;
                 document.getElementById('listaCopyBtn').style.display = 'none';
+                document.getElementById('listaClearBtn').style.display = 'none';
             } else {
                 items.innerHTML = lista.map(function (item, i) {
                     return `
@@ -2018,6 +2545,7 @@
                 }).join('');
                 document.getElementById('listaShareBtn').disabled = false;
                 document.getElementById('listaCopyBtn').style.display = 'block';
+                document.getElementById('listaClearBtn').style.display = 'flex';
             }
             document.getElementById('listaTotal').textContent = formatPrice(lista.reduce(function (s, i) { return s + i.finalPrice; }, 0));
         }
@@ -2036,12 +2564,12 @@
         }
         function shareListaWhatsApp() {
             if (!lista.length) return;
-            let msg = '*Lista de Precios — Adonay Tobar*\n\n';
+            let msg = '*Precios*\n\n';
             lista.forEach(function (item, i) {
                 msg += (i + 1) + '. *' + (item.code || 'SIN CODIGO') + '* — ' + (item.description || 'Sin descripcion') + '\n';
                 msg += '   *' + formatPrice(item.finalPrice) + '*\n\n';
             });
-            msg += '*Total: ' + formatPrice(lista.reduce(function (s, i) { return s + i.finalPrice; }, 0)) + '*\n\n_Adonay Tobar_';
+            msg += '*Total: ' + formatPrice(lista.reduce(function (s, i) { return s + i.finalPrice; }, 0)) + '*\n\n_Galvanissa Aguazarca_';
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
 
@@ -2053,6 +2581,7 @@
             if (count === 0) {
                 items.innerHTML = '<div class="sidebar-empty">Tu carrito esta vacio</div>';
                 document.getElementById('carritoShareBtn').disabled = true;
+                document.getElementById('carritoClearBtn').style.display = 'none';
             } else {
                 items.innerHTML = carrito.map(function (item, i) {
                     const code = item.code || '';
@@ -2091,6 +2620,7 @@
       </div>`;
                 }).join('');
                 document.getElementById('carritoShareBtn').disabled = false;
+                document.getElementById('carritoClearBtn').style.display = 'flex';
             }
             document.getElementById('carritoTotal').textContent = formatPrice(carrito.reduce(function (s, i) { return s + i.finalPrice; }, 0));
         }
@@ -2132,9 +2662,31 @@
             showToast('Quitado', 'warning');
         }
 
+        function clearAllLista() {
+            if (!lista.length) return;
+            if (confirm('¿Borrar toda la lista? Esta acción no se puede deshacer.')) {
+                lista = [];
+                saveData();
+                renderProducts();
+                updateListaUI();
+                showToast('Lista vaciada', 'warning');
+            }
+        }
+
+        function clearAllCarrito() {
+            if (!carrito.length) return;
+            if (confirm('¿Borrar todo el carrito? Esta acción no se puede deshacer.')) {
+                carrito = [];
+                saveData();
+                renderProducts();
+                updateCarritoUI();
+                showToast('Carrito vaciado', 'warning');
+            }
+        }
+
         function shareCarritoWhatsApp() {
             if (!carrito.length) return;
-            let msg = '*Carrito — Adonay Tobar*\n\n';
+            let msg = '*Cotizacion*\n\n';
             carrito.forEach(function (item, i) {
                 const code = item.code || '';
                 const isMeters = code.startsWith('12');
@@ -2155,7 +2707,7 @@
                 }
                 msg += '\n';
             });
-            msg += '*Total: ' + formatPrice(carrito.reduce(function (s, i) { return s + i.finalPrice; }, 0)) + '*\n\n_Adonay Tobar_';
+            msg += '*Total: ' + formatPrice(carrito.reduce(function (s, i) { return s + i.finalPrice; }, 0)) + '*\n\n_Galvanissa Aguazarca_';
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
 
