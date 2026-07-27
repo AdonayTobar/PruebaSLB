@@ -9,21 +9,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
         :root {
-            --bg: #ffffff;
-            --surface: #f7f7f8;
-            --surface-hover: #ededf0;
-            --border: #e0e0e5;
-            --text: #1a1a2e;
-            --text-secondary: #555566;
-            --text-muted: #8888a0;
-            --accent: #2a2a3e;
-            --accent-bg: #eeeef5;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --radius: 12px;
-            --radius-sm: 8px;
+            --bg: #f7f9fb;
+            --surface: #ffffff;
+            --surface-hover: #f3f4f6;
+            --border: #e5e7eb;
+            --text: #293241;
+            --text-secondary: #4b5563;
+            --text-muted: #6b7280;
+            --accent: #293241;
+            --accent-bg: #e0e7ff;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         * {
@@ -42,7 +49,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
@@ -63,8 +70,9 @@
             top: 0;
             z-index: 100;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             padding: 12px 14px;
         }
 
@@ -75,13 +83,16 @@
         }
 
         .logo {
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: 800;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.5px;
+            color: var(--text);
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .logo span {
-            color: var(--text-secondary);
+            color: var(--text-muted);
             font-weight: 400;
         }
 
@@ -96,10 +107,19 @@
             border: 1px solid var(--border);
             color: var(--text);
             padding: 8px 14px;
-            border-radius: var(--radius-sm);
+            border-radius: 9999px;
             font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md);
+            min-width: 85px;
+            text-align: center;
+        }
+
+        .header-btn:hover {
+            background: var(--surface-hover);
+            transform: translateY(-1px);
         }
 
         .header-btn:active {
@@ -120,39 +140,50 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid #fff;
         }
 
         /* SEARCH */
         .search-section {
-            padding: 12px 14px 8px;
+            padding: 16px 14px 8px;
+            max-width: 70rem;
+            margin: 0 auto;
         }
 
         .search-box {
             position: relative;
+            background: var(--surface);
+            border-radius: 9999px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
         }
 
         .search-box input {
             width: 100%;
-            padding: 14px 16px 14px 44px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
+            padding: 14px 50px 14px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 9999px;
             color: var(--text);
             font-size: 0.95rem;
             outline: none;
+            font-family: 'Inter', sans-serif;
         }
 
         .search-box input::placeholder {
             color: var(--text-muted);
         }
 
-        .search-icon {
+        .clear-search-btn {
             position: absolute;
-            left: 16px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
             color: var(--text-muted);
-            font-size: 1rem;
+            display: none;
         }
 
         .search-meta {
@@ -175,7 +206,7 @@
             width: 32px;
             height: 32px;
             border: 2.5px solid var(--border);
-            border-top-color: var(--text);
+            border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
             margin: 0 auto 12px;
@@ -189,23 +220,39 @@
 
         /* PRODUCT LIST */
         .product-list {
-            padding: 0 0 32px;
+            padding: 0 8px 32px;
+            max-width: 70rem;
+            margin: 12px auto 0;
         }
 
         .product-card {
             background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 6px 12px;
+            /* Padding Y reducido para móvil */
+            margin-bottom: 0;
             cursor: pointer;
             transition: background 0.15s;
+            box-shadow: none;
+        }
+
+        .product-card+.product-card {
+            border-top: none;
         }
 
         .product-card:first-child {
-            border-top: 1px solid var(--border);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .product-card:last-child {
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
         }
 
         .product-card:active {
-            background: var(--surface-hover);
+            background: #f9fafb;
         }
 
         .product-top {
@@ -213,16 +260,18 @@
             justify-content: space-between;
             align-items: center;
             gap: 10px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            /* Reducido */
         }
 
         .product-code {
             font-family: 'SF Mono', monospace;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--accent);
-            background: var(--accent-bg);
-            padding: 3px 8px;
+            font-size: 0.7rem;
+            /* Letras más pequeñas en móvil */
+            font-weight: 700;
+            color: var(--text);
+            background: #f3f4f6;
+            padding: 2px 6px;
             border-radius: 5px;
             letter-spacing: 0.3px;
             user-select: all;
@@ -231,72 +280,95 @@
         }
 
         .product-code.copied {
-            background: rgba(74, 222, 128, 0.15);
+            background: rgba(22, 163, 74, 0.15);
             color: var(--success);
         }
 
         .product-price {
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 0.85rem;
+            /* Letras más pequeñas en móvil */
+            font-weight: 800;
             white-space: nowrap;
             flex-shrink: 0;
+            color: var(--accent);
         }
 
         .product-desc {
-            font-size: 0.88rem;
-            color: var(--text-secondary);
-            line-height: 1.35;
+            font-size: 0.76rem;
+            /* Letras más pequeñas en móvil */
+            color: var(--text);
+            font-weight: 700;
+            line-height: 1.3;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            margin-bottom: 4px;
+            /* Reducido */
         }
 
         .product-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 8px;
+            margin-top: 2px;
+            width: 100%;
+            padding: 0 40px 0 40px;
+            /* Ocupa todo el ancho disponible para separarlos a los extremos */
+            justify-content: space-between;
+            /* Botones a los extremos */
         }
 
         .btn-action {
-            flex: 1;
-            padding: 9px 0;
-            border-radius: var(--radius-sm);
-            font-size: 0.8rem;
+            flex: 0 0 100px;
+            /* Ancho fijo en 110px, no se encoge ni se estira */
+            width: 110px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.72rem;
             font-weight: 600;
             cursor: pointer;
-            border: none;
+            border: 1px solid transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s;
+            transition: all 0.2s;
         }
 
         .btn-action:active {
             transform: scale(0.97);
-            opacity: 0.85;
         }
 
         .btn-action.lista {
-            background: transparent;
-            color: var(--warning);
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            background: #3d5a80;
+            color: #fff;
+            border-color: #293241;
+        }
+
+        .btn-action.lista:hover {
+            background: #3d5a80;
+            border-color: #3d5a80;
         }
 
         .btn-action.lista.added {
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.5);
+            background: #3d5a80;
+            color: #fff;
+            border-color: #3d5a80;
         }
 
         .btn-action.carrito {
-            background: transparent;
-            color: var(--success);
-            border: 1px solid rgba(34, 197, 94, 0.35);
+            background: #4b5563;
+            color: #fff;
+            border-color: #4b5563;
+        }
+
+        .btn-action.carrito:hover {
+            background: #6b7280;
+            border-color: #6b7280;
         }
 
         .btn-action.carrito.added {
-            background: rgba(34, 197, 94, 0.1);
-            border-color: rgba(34, 197, 94, 0.5);
+            background: #6b7280;
+            color: #fff;
+            border-color: #6b7280;
         }
 
         /* NO RESULTS */
@@ -312,11 +384,10 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: #1a1a2e;
-            border: 1px solid #2a2a3e;
-            color: #f0f0f5;
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
+            background: var(--text);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 9999px;
             font-size: 0.85rem;
             font-weight: 500;
             z-index: 200;
@@ -325,7 +396,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+            box-shadow: var(--shadow-xl);
         }
 
         .toast.show {
@@ -333,19 +404,12 @@
             opacity: 1;
         }
 
-        .toast.success {
-            border-color: var(--success);
-        }
-
-        .toast.warning {
-            border-color: var(--warning);
-        }
-
-        /* MODAL - VER PRECIOS */
+        /* MODALS */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(4px);
             z-index: 200;
             display: flex;
             align-items: flex-end;
@@ -353,6 +417,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s;
+            padding: 0;
         }
 
         .modal-overlay.active {
@@ -362,16 +427,16 @@
 
         .modal {
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius) var(--radius) 0 0;
             width: 100%;
+            max-width: 100%;
             height: 100vh;
+            max-height: 100vh;
             overflow-y: auto;
-            padding: 20px 16px 28px;
+            padding: 24px;
             transform: translateY(100%);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             scrollbar-width: none;
-            -ms-overflow-style: none;
+            border-radius: 0;
         }
 
         .modal::-webkit-scrollbar {
@@ -387,18 +452,29 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
+            position: sticky;
+            top: -24px;
+            background: var(--surface);
+            padding: 20px 0 12px 0;
+            margin-left: -24px;
+            margin-right: -24px;
+            padding-left: 24px;
+            padding-right: 24px;
+            z-index: 10;
+            border-bottom: 1px solid var(--border);
         }
 
         .modal-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 800;
             line-height: 1.3;
+            color: var(--text);
             padding-right: 12px;
         }
 
         .modal-close {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: 1px solid var(--border);
             background: var(--bg);
@@ -409,83 +485,56 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #fee2e2;
+            color: var(--danger);
+            border-color: #fecaca;
         }
 
         .modal-code {
             font-family: monospace;
             font-size: 0.85rem;
-            background: var(--accent-bg);
+            background: #f3f4f6;
             padding: 8px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             margin-bottom: 12px;
             cursor: copy;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-weight: 600;
+            color: var(--text);
         }
 
         .modal-desc {
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-        }
-
-        .discounts-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 2fr);
-            gap: 8px;
-        }
-
-        .discount-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 14px 6px;
-            text-align: center;
-        }
-
-        .discount-label {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin-bottom: 4px;
-        }
-
-        .discount-pct {
+            color: var(--text);
+            margin-bottom: 20px;
             font-size: 1.1rem;
             font-weight: 800;
-            color: var(--warning);
         }
 
-        .discount-price {
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-top: 2px;
-        }
-
-        .discount-original {
-            font-size: 0.68rem;
-            color: var(--text-muted);
-            text-decoration: line-through;
-        }
-
-        /* MODAL - ELEGIR DESCUENTO */
         .discount-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .discount-option {
-            background: var(--bg);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 14px 10px;
+            padding: 16px 10px;
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid transparent;
         }
 
         .discount-option:active {
@@ -493,46 +542,85 @@
         }
 
         .discount-option.selected {
-            border-color: var(--success);
-            background: rgba(34, 197, 94, 0.08);
+            transform: scale(0.97);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 2;
         }
 
         .discount-option .opt-label {
-            font-size: 0.72rem;
-            color: var(--text-muted);
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            font-weight: 700;
+            opacity: 0.8;
         }
 
         .discount-option .opt-pct {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             font-weight: 800;
+            margin-bottom: 4px;
         }
 
         .discount-option .opt-price {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-top: 2px;
         }
 
         .discount-option .opt-original {
-            font-size: 0.72rem;
-            color: var(--text-muted);
+            font-size: 0.75rem;
+            opacity: 0.6;
             text-decoration: line-through;
+            margin-bottom: 2px;
+        }
+
+        .bg-gray {
+            background-color: #f3f4f6;
+            color: #374151;
+            border-color: #e5e7eb;
+        }
+
+        .bg-yellow {
+            background-color: #fef9c3;
+            color: #854d0e;
+            border-color: #fde68a;
+        }
+
+        .bg-green {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        .bg-indigo {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            border-color: #c7d2fe;
+        }
+
+        .bg-red {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fecaca;
         }
 
         .modal-confirm-btn {
             width: 100%;
             padding: 14px;
             border: none;
-            border-radius: var(--radius-sm);
-            background: var(--text);
-            color: var(--bg);
+            border-radius: 9999px;
+            background: var(--primary);
+            color: #fff;
             font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.4);
+        }
+
+        .modal-confirm-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
         }
 
         .modal-confirm-btn:active {
@@ -542,13 +630,14 @@
 
         /* MODAL - CANTIDAD / METROS */
         .quantity-section {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .quantity-label {
             font-size: 0.8rem;
             color: var(--text-muted);
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .quantity-input-wrapper {
@@ -557,8 +646,8 @@
             justify-content: center;
             gap: 0;
             background: var(--bg);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            border-radius: 9999px;
             overflow: hidden;
         }
 
@@ -566,7 +655,7 @@
             width: 48px;
             height: 48px;
             border: none;
-            background: var(--surface);
+            background: transparent;
             color: var(--text);
             font-size: 1.3rem;
             font-weight: 700;
@@ -578,15 +667,15 @@
             user-select: none;
         }
 
-        .qty-btn:active {
-            background: var(--surface-hover);
+        .qty-btn:hover {
+            background: #e5e7eb;
         }
 
         .qty-input {
             width: 100px;
             height: 48px;
             border: none;
-            background: var(--bg);
+            background: transparent;
             color: var(--text);
             font-size: 1.1rem;
             font-weight: 700;
@@ -611,28 +700,30 @@
         .qty-subtotal {
             text-align: center;
             margin-top: 12px;
-            padding: 10px;
-            background: var(--accent-bg);
+            padding: 12px;
+            background: #eef2ff;
             border-radius: var(--radius-sm);
         }
 
         .qty-subtotal-label {
             font-size: 0.72rem;
-            color: var(--text-muted);
+            color: var(--primary);
             text-transform: uppercase;
+            font-weight: 700;
         }
 
         .qty-subtotal-price {
             font-size: 1.2rem;
             font-weight: 800;
-            color: var(--success);
+            color: var(--text);
         }
 
         /* SIDEBARS */
         .sidebar-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(4px);
             z-index: 160;
             opacity: 0;
             pointer-events: none;
@@ -650,14 +741,14 @@
             right: 0;
             bottom: 0;
             width: 100%;
-            max-width: 400px;
-            background: var(--surface);
-            border-left: 1px solid var(--border);
+            max-width: 420px;
+            background: var(--bg);
             z-index: 161;
             transform: translateX(100%);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
+            box-shadow: -10px 0 25px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar.active {
@@ -665,31 +756,39 @@
         }
 
         .sidebar-header {
-            padding: 16px;
+            padding: 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: var(--surface);
         }
 
         .sidebar-header h2 {
-            font-size: 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text);
         }
 
         .sidebar-close {
-            background: none;
-            border: none;
+            background: var(--bg);
+            border: 1px solid var(--border);
             color: var(--text);
-            font-size: 1.3rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1rem;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .sidebar-items {
             flex: 1;
             overflow-y: auto;
-            padding: 12px 16px;
+            padding: 16px;
             scrollbar-width: none;
-            -ms-overflow-style: none;
         }
 
         .sidebar-items::-webkit-scrollbar {
@@ -700,40 +799,56 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            margin-bottom: 12px;
             cursor: pointer;
-            transition: background 0.15s;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        .sidebar-item:active {
-            background: var(--surface-hover);
+        .sidebar-item:hover {
+            box-shadow: var(--shadow-md);
         }
 
         .sidebar-item-info {
             flex: 1;
             min-width: 0;
-            padding-right: 8px;
+            padding-right: 12px;
         }
 
         .sidebar-item-code {
             font-family: monospace;
             font-size: 0.75rem;
-            color: var(--text-muted);
+            color: var(--text);
+            font-weight: 700;
+            background: #f3f4f6;
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 4px;
         }
 
         .sidebar-item-desc {
-            font-size: 0.85rem;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 1rem;
+            color: #111827;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            word-wrap: break-word;
         }
 
         .sidebar-item-discount {
             font-size: 0.7rem;
-            color: var(--warning);
-            margin-top: 2px;
+            color: #fff;
+            background: var(--success);
+            margin-top: 4px;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-weight: 600;
         }
 
         .sidebar-item-meta {
@@ -746,32 +861,38 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 6px;
+            gap: 8px;
         }
 
         .sidebar-item-price {
-            font-weight: 700;
-            font-size: 0.95rem;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--accent);
             white-space: nowrap;
         }
 
         .sidebar-item-remove {
-            background: none;
+            background: #fee2e2;
             border: none;
             color: var(--danger);
             cursor: pointer;
             font-size: 1.1rem;
-            padding: 2px;
+            padding: 6px;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Cantidad en sidebar carrito */
         .cart-qty-controls {
             display: flex;
             align-items: center;
             gap: 0;
             background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 9999px;
             overflow: hidden;
         }
 
@@ -791,12 +912,12 @@
             user-select: none;
         }
 
-        .cart-qty-btn:active {
-            background: var(--surface-hover);
+        .cart-qty-btn:hover {
+            background: #e5e7eb;
         }
 
         .cart-qty-value {
-            width: 36px;
+            width: 40px;
             height: 28px;
             border: none;
             background: transparent;
@@ -821,24 +942,29 @@
         }
 
         .sidebar-footer {
-            padding: 16px;
+            padding: 20px;
             border-top: 1px solid var(--border);
+            background: var(--surface);
         }
 
         .sidebar-total {
             display: flex;
             justify-content: space-between;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--text);
+            background: #eef2ff;
+            padding: 12px;
+            border-radius: var(--radius-sm);
         }
 
         .sidebar-share {
             width: 100%;
             padding: 14px;
             border: none;
-            border-radius: var(--radius-sm);
-            background: #25D366;
+            border-radius: 9999px;
+            background: #16a34a;
             color: #fff;
             font-size: 0.95rem;
             font-weight: 700;
@@ -847,7 +973,13 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: opacity 0.15s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.4);
+        }
+
+        .sidebar-share:hover {
+            background: #15803d;
+            transform: translateY(-1px);
         }
 
         .sidebar-share:active {
@@ -857,39 +989,40 @@
         .sidebar-share:disabled {
             opacity: 0.35;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .sidebar-copy {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: transparent;
-            color: var(--text-secondary);
+            border-radius: 9999px;
+            background: var(--surface);
+            color: var(--text);
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             margin-bottom: 10px;
-            transition: all 0.15s;
+            transition: all 0.2s;
         }
 
-        .sidebar-copy:active {
-            background: var(--surface-hover);
+        .sidebar-copy:hover {
+            background: var(--bg);
         }
 
-        /* CLEAR ALL BUTTON */
         .sidebar-clear-all {
             width: 100%;
             padding: 10px;
-            border: 1px solid var(--danger);
-            border-radius: var(--radius-sm);
-            background: transparent;
+            border: 1px solid #fecaca;
+            border-radius: 9999px;
+            background: #fff;
             color: var(--danger);
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             margin-bottom: 10px;
-            transition: all 0.15s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -897,34 +1030,7 @@
         }
 
         .sidebar-clear-all:hover {
-            background: rgba(239, 68, 68, 0.08);
-        }
-
-        .sidebar-clear-all:active {
-            background: rgba(239, 68, 68, 0.15);
-            transform: scale(0.98);
-        }
-
-        @media (min-width: 640px) {
-            .header {
-                padding: 14px 24px;
-            }
-
-            .search-section {
-                padding: 16px 24px 10px;
-            }
-
-            .product-card {
-                padding: 12px 20px;
-            }
-
-            .modal {
-                border-radius: var(--radius);
-                margin: auto 16px;
-                max-height: 90vh;
-                height: auto;
-                max-width: 50rem;
-            }
+            background: #fee2e2;
         }
 
         /* DESKTOP TABLE LAYOUT */
@@ -934,22 +1040,23 @@
             }
 
             .search-section {
-                padding: 16px 40px 10px;
-                max-width: 600px;
+                padding: 20px 40px 10px;
+                max-width: 700px;
             }
 
             .product-list {
-                padding: 0 40px 32px;
+                margin: 0 auto;
+                padding: 0 40px 40px;
+                max-width: 70rem;
             }
 
-            /* Table header */
             .product-list::before {
                 content: '';
                 display: block;
-                padding: 10px 16px;
-                background: var(--surface);
+                padding: 12px 16px;
+                background: #f9fafb;
                 border: 1px solid var(--border);
-                border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+                border-radius: var(--radius) var(--radius) 0 0;
                 font-size: 0.75rem;
                 font-weight: 700;
                 color: var(--text-muted);
@@ -963,13 +1070,14 @@
                 grid-template-rows: auto;
                 align-items: center;
                 gap: 16px;
-                padding: 12px 16px;
-                border-bottom: 1px solid var(--border);
+                padding: 10px 20px;
+                /* Padding Y un poco mayor en PC */
+                margin-bottom: 0;
+                border-radius: 0;
+                border-top: none;
                 border-left: 1px solid var(--border);
                 border-right: 1px solid var(--border);
-                border-top: none;
-                background: var(--bg);
-                border-radius: 0;
+                box-shadow: none;
             }
 
             .product-card:first-child {
@@ -977,11 +1085,14 @@
             }
 
             .product-card:last-child {
-                border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+                border-radius: 0 0 var(--radius) var(--radius);
+                border-bottom: 1px solid var(--border);
             }
 
             .product-card:hover {
-                background: var(--surface);
+                background: #f9fafb;
+                transform: none;
+                box-shadow: none;
             }
 
             .product-top {
@@ -990,11 +1101,14 @@
 
             .product-code {
                 font-size: 0.8rem;
+                /* Tamaño normal en PC */
+                padding: 3px 8px;
                 justify-self: start;
             }
 
             .product-desc {
-                font-size: 0.88rem;
+                font-size: 0.9rem;
+                /* Tamaño normal en PC */
                 -webkit-line-clamp: 1;
                 margin-bottom: 0;
                 grid-column: 2;
@@ -1002,7 +1116,8 @@
             }
 
             .product-price {
-                font-size: 1rem;
+                font-size: 1.1rem;
+                /* Tamaño normal en PC */
                 grid-column: 3;
                 grid-row: 1;
                 text-align: right;
@@ -1011,49 +1126,43 @@
 
             .product-actions {
                 margin-top: 0;
-                gap: 8px;
+                gap: 10px;
                 grid-column: 4;
                 grid-row: 1;
-                min-width: 180px;
-                justify-content: flex-end;
+                min-width: 240px;
+                justify-content: space-between;
+                /* Mantienen proporción en PC */
             }
 
             .btn-action {
                 flex: 0 0 auto;
-                padding: 7px 16px;
+                width: 110px;
+                padding: 8px 10px;
+                /* Padding normal en PC */
                 font-size: 0.78rem;
+                /* Texto normal en PC */
             }
 
             .sidebar {
                 max-width: 440px;
-                box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .header {
-                padding: 14px 60px;
             }
 
-            .search-section {
-                padding: 20px 60px 12px;
-                max-width: 700px;
+            .modal-overlay {
+                align-items: center;
+                padding: 16px;
             }
 
-            .product-list {
-                margin: 0 auto;
-                padding: 0 60px 40px;
-                max-width: 70rem;
+            .modal {
+                width: 100%;
+                max-width: 600px;
+                height: auto;
+                max-height: 90vh;
+                transform: scale(0.95);
+                border-radius: 24px;
             }
 
-            .product-card {
-                grid-template-columns: 160px 1fr auto auto;
-                padding: 14px 20px;
-                gap: 24px;
-            }
-
-            .product-actions {
-                min-width: 200px;
+            .modal-overlay.active .modal {
+                transform: scale(1);
             }
         }
 
@@ -1062,14 +1171,17 @@
             display: flex;
             gap: 8px;
             margin-bottom: 14px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 9999px;
         }
 
         .meters-mode-btn {
             flex: 1;
             padding: 10px 8px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--bg);
+            border: 1px solid transparent;
+            border-radius: 9999px;
+            background: transparent;
             color: var(--text-muted);
             font-size: 0.8rem;
             font-weight: 600;
@@ -1083,9 +1195,10 @@
         }
 
         .meters-mode-btn.active {
-            border-color: var(--success);
+            border-color: var(--primary);
             color: var(--text);
-            background: rgba(34, 197, 94, 0.06);
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
         }
 
         /* PIECES TABLE */
@@ -1096,6 +1209,7 @@
             border-radius: var(--radius-sm);
             margin-bottom: 10px;
             scrollbar-width: thin;
+            background: var(--surface);
         }
 
         .pieces-table {
@@ -1110,7 +1224,7 @@
         }
 
         .pieces-table th {
-            background: var(--surface);
+            background: #f9fafb;
             padding: 8px 10px;
             font-size: 0.72rem;
             font-weight: 700;
@@ -1151,10 +1265,12 @@
             text-align: center;
             outline: none;
             -moz-appearance: textfield;
+            font-family: 'Inter', sans-serif;
         }
 
         .pieces-table input:focus {
-            border-color: var(--success);
+            border-color: var(--primary);
+            background: #fff;
         }
 
         .pieces-table input::-webkit-outer-spin-button,
@@ -1180,7 +1296,7 @@
         }
 
         .piece-remove-btn:hover {
-            background: rgba(239, 68, 68, 0.1);
+            background: #fee2e2;
         }
 
         .piece-row-num {
@@ -1189,14 +1305,13 @@
             font-weight: 600;
         }
 
-        /* FLOATING ADD BUTTON */
         .pieces-add-btn {
             width: 100%;
             padding: 10px;
             border: 1.5px dashed var(--border);
             border-radius: var(--radius-sm);
             background: transparent;
-            color: var(--success);
+            color: var(--primary);
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
@@ -1209,21 +1324,16 @@
         }
 
         .pieces-add-btn:hover {
-            background: rgba(34, 197, 94, 0.05);
-            border-color: var(--success);
+            background: #eef2ff;
+            border-color: var(--primary);
         }
 
-        .pieces-add-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* PIECES SUMMARY */
         .pieces-summary {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 12px;
-            background: var(--accent-bg);
+            padding: 12px;
+            background: #eef2ff;
             border-radius: var(--radius-sm);
             margin-bottom: 12px;
         }
@@ -1241,7 +1351,110 @@
         .pieces-summary-total {
             font-size: 1.1rem;
             font-weight: 800;
-            color: var(--success);
+            color: var(--primary);
+        }
+
+        .label-mini {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+        }
+
+        .offer-warning {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #b91c1c;
+            margin-bottom: 16px;
+            background: #fee2e2;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+        }
+
+        .restricted-warning {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 16px;
+            background: #fef2f2;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #fee2e2;
+        }
+
+        .discount-row {
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .discount-row.bg-red {
+            background-color: #fee2e2;
+            border-left-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .discount-row.bg-yellow {
+            background-color: #fef9c3;
+            border-left-color: #ca8a04;
+            color: #854d0e;
+        }
+
+        .discount-row.bg-green {
+            background-color: #dcfce7;
+            border-left-color: #16a34a;
+            color: #166534;
+        }
+
+        .discount-row.bg-indigo {
+            background-color: #e0e7ff;
+            border-left-color: #4f46e5;
+            color: #3730a3;
+        }
+
+        .discount-row.bg-gray {
+            background-color: #f3f4f6;
+            border-left-color: #9ca3af;
+            color: #374151;
+        }
+
+        .discount-row .price {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .discount-row .label {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .discount-row .sublabel {
+            font-size: 0.75rem;
+            opacity: 0.75;
         }
     </style>
     <base target="_blank">
@@ -1251,7 +1464,8 @@
 
     <header class="header">
         <div class="header-inner">
-            <div class="logo">Adonay <span>Tobar</span></div>
+            <a href="#" onclick="event.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });"
+                class="logo">Adonay <span>Tobar</span></a>
             <div class="header-actions">
                 <button class="header-btn" onclick="openSidebar('lista')">
                     Lista
@@ -1267,9 +1481,14 @@
 
     <section class="search-section">
         <div class="search-box">
-            <span class="search-icon">&#128269;</span>
-            <input type="text" id="searchInput" placeholder="Buscar: polin 4x2, tubo cuad 1, angulo ght..."
-                autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Buscar por código, descripción..." autocomplete="off">
+            <button id="clearSearchBtn" class="clear-search-btn" title="Limpiar Búsqueda">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
         </div>
         <div class="search-meta">
             <span id="resultCount">Cargando productos...</span>
@@ -1301,29 +1520,7 @@
                 <span>Copiar</span>
             </div>
             <div class="modal-desc" id="priceModalDesc">Descripcion</div>
-            <div style="margin-bottom: 10px; font-size: 0.8rem; color: var(--text-muted);">Precios con descuento:</div>
-            <div class="discounts-grid">
-                <div class="discount-card">
-                    <div class="discount-label">Normal</div>
-                    <div class="discount-pct" style="color:var(--text)">-</div>
-                    <div class="discount-price" id="viewPrice0"></div>
-                </div>
-                <div class="discount-card">
-                    <div class="discount-label">3%</div>
-                    <div class="discount-original" id="viewOrig3"></div>
-                    <div class="discount-price" id="viewPrice3"></div>
-                </div>
-                <div class="discount-card">
-                    <div class="discount-label">4%</div>
-                    <div class="discount-original" id="viewOrig4"></div>
-                    <div class="discount-price" id="viewPrice4"></div>
-                </div>
-                <div class="discount-card">
-                    <div class="discount-label">5%</div>
-                    <div class="discount-original" id="viewOrig5"></div>
-                    <div class="discount-price" id="viewPrice5"></div>
-                </div>
-            </div>
+            <div id="priceModalContent"></div>
         </div>
     </div>
 
@@ -1339,40 +1536,41 @@
                 <span>Copiar</span>
             </div>
             <div class="modal-desc" id="discountModalDesc">Descripcion</div>
-            <div style="margin-bottom: 10px; font-size: 0.8rem; color: var(--text-muted);">Selecciona el precio:</div>
+
+            <div id="discountPolicyWarning"></div>
+
             <div class="discount-options">
-                <div class="discount-option" data-discount="0" onclick="selectDiscount(0)">
+                <div class="discount-option bg-gray" data-discount="0" onclick="selectDiscount(0)">
                     <div class="opt-label">Precio normal</div>
-                    <div class="opt-pct" style="color:var(--text)">-</div>
+                    <div class="opt-pct">-</div>
                     <div class="opt-price" id="optPrice0"></div>
                 </div>
-                <div class="discount-option" data-discount="3" onclick="selectDiscount(3)">
+                <div class="discount-option bg-yellow" data-discount="3" onclick="selectDiscount(3)">
                     <div class="opt-label">Descuento</div>
-                    <div class="opt-pct" style="color:var(--warning)">3%</div>
+                    <div class="opt-pct">3%</div>
                     <div class="opt-original" id="optOrig3"></div>
                     <div class="opt-price" id="optPrice3"></div>
                 </div>
-                <div class="discount-option" data-discount="4" onclick="selectDiscount(4)">
+                <div class="discount-option bg-green" data-discount="4" onclick="selectDiscount(4)">
                     <div class="opt-label">Descuento</div>
-                    <div class="opt-pct" style="color:var(--warning)">4%</div>
+                    <div class="opt-pct">4%</div>
                     <div class="opt-original" id="optOrig4"></div>
                     <div class="opt-price" id="optPrice4"></div>
                 </div>
-                <div class="discount-option" data-discount="5" onclick="selectDiscount(5)">
+                <div class="discount-option bg-indigo" data-discount="5" onclick="selectDiscount(5)">
                     <div class="opt-label">Descuento</div>
-                    <div class="opt-pct" style="color:var(--warning)">5%</div>
+                    <div class="opt-pct">5%</div>
                     <div class="opt-original" id="optOrig5"></div>
                     <div class="opt-price" id="optPrice5"></div>
                 </div>
             </div>
 
-            <!-- SECCION CANTIDAD (visible para todos los codigos EXCEPTO los que empiezan con 12) -->
             <div class="quantity-section" id="quantitySection" style="display:none">
                 <div class="quantity-label">Cantidad:</div>
                 <div class="quantity-input-wrapper">
                     <button class="qty-btn" onclick="changeQty(-1)">&#8722;</button>
-                    <input type="number" class="qty-input" id="qtyInput" value="1" min="1"
-                        oninput="updateQtySubtotal()">
+                    <input type="number" class="qty-input" id="qtyInput" value="1" min="1" oninput="updateQtySubtotal()"
+                        onfocus="this.select();">
                     <button class="qty-btn" onclick="changeQty(1)">+</button>
                 </div>
                 <div class="qty-unit">unidades</div>
@@ -1382,7 +1580,6 @@
                 </div>
             </div>
 
-            <!-- SECCION METROS (solo visible para codigos que empiezan con 12) -->
             <div class="quantity-section" id="metersSection" style="display:none">
                 <div class="quantity-label">¿Cómo ingresar metros?</div>
                 <div class="meters-mode-selector">
@@ -1392,17 +1589,15 @@
                         por medida</button>
                 </div>
 
-                <!-- MODO TOTAL DIRECTO -->
                 <div id="metersTotalSection">
                     <div class="quantity-input-wrapper" style="border:none; background:transparent;">
                         <input type="number" class="qty-input" id="metersInput" value="1" min="0.01" step="0.01"
-                            oninput="updateMetersSubtotal()"
-                            style="width:100%; border:1.5px solid var(--border); border-radius:var(--radius-sm);">
+                            oninput="updateMetersSubtotal()" onfocus="this.select();"
+                            style="width:100%; border:2px solid var(--border); border-radius:9999px; padding: 10px;">
                     </div>
                     <div class="qty-unit">metros (ej: 144.98, 300.89)</div>
                 </div>
 
-                <!-- MODO MEDIDA POR MEDIDA -->
                 <div id="metersDetailSection" style="display:none">
                     <div class="pieces-container" id="piecesContainer">
                         <table class="pieces-table">
@@ -1471,7 +1666,8 @@
                 Borrar todo</button>
             <div class="sidebar-total"><span>Total:</span><span id="carritoTotal">$0.00</span></div>
             <button class="sidebar-share" id="carritoPdfBtn" onclick="openPdfDataModal()"
-                style="background: #ef4444; margin-bottom: 8px;">📄 Generar Cotización PDF</button>
+                style="background: #ef4444; margin-bottom: 8px; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.4);">📄
+                Generar Cotización PDF</button>
             <button class="sidebar-share" id="carritoShareBtn" onclick="shareCarritoWhatsApp()" disabled>Compartir por
                 WhatsApp</button>
         </div>
@@ -1479,23 +1675,19 @@
 
     <!-- MODAL DATOS CLIENTE PARA PDF -->
     <div class="modal-overlay" id="pdfDataModal" onclick="closePdfDataModal(event)">
-        <div class="modal" onclick="event.stopPropagation()"
-            style="max-height: auto; height: auto; padding: 24px 20px;">
+        <div class="modal" onclick="event.stopPropagation()" style="max-height: auto; height: auto; padding: 24px;">
             <div class="modal-header">
                 <div class="modal-title">Datos de la Cotización</div>
                 <button class="modal-close" onclick="closePdfDataModal()">&#10005;</button>
             </div>
             <div style="margin-bottom: 16px;">
-                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Nombre
-                    del Cliente</label>
+                <label class="label-mini">Nombre del Cliente</label>
                 <input type="text" id="pdfClienteNombre" placeholder="Ej: JOSE ARNULFO MARTINEZ FLORES"
-                    style="width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none;">
+                    class="input-field">
             </div>
             <div style="margin-bottom: 20px;">
-                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Asesor
-                    de Ventas</label>
-                <input type="text" id="pdfAsesorNombre" value="Tobar Josue Adonay"
-                    style="width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none;">
+                <label class="label-mini">Asesor de Ventas</label>
+                <input type="text" id="pdfAsesorNombre" value="Tobar Josue Adonay" class="input-field">
             </div>
             <button class="modal-confirm-btn" onclick="generarCotizacionPDF()">Generar Cotización PDF</button>
         </div>
@@ -1504,12 +1696,11 @@
     <script>
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8XYpMQEshg2eZghit9nFFjIiRz8_G_PHnlOlYWmsX9kzrN1CH7v_FQE0ciZnU8Va4AZofLfJvm4KF/pub?output=csv';
 
-        // Productos de ejemplo en caso de error con Google Sheets
         const FALLBACK_PRODUCTS = [
-            { id: 9001, code: '1201-001', description: 'LAMINA GALVANIZADA LISA 4x8 C26 GHT', price: 185.50, category: 'Laminas' },
-            { id: 9002, code: '0501-010', description: 'TUBO CUADRADO 1" CH18 GHT 6.0 MTS', price: 95.00, category: 'Tubos' },
-            { id: 9003, code: '1202-005', description: 'LAMINA ZINC CORRUGADA 12 PIES C26 GHT', price: 220.75, category: 'Laminas' },
-            { id: 9004, code: '0301-020', description: 'POLIN C 4x2 CH16 GHT 6.0 MTS', price: 310.00, category: 'Polines' }
+            { id: 9001, code: '1201-001', description: 'LAMINA GALVANIZADA LISA 4x8 C26 GHT', price: 185.50, category: 'Laminas', searchableText: '' },
+            { id: 9002, code: '0501-010', description: 'TUBO CUADRADO 1" CH18 GHT 6.0 MTS', price: 95.00, category: 'Tubos', searchableText: '' },
+            { id: 9003, code: '1202-005', description: 'LAMINA ZINC CORRUGADA 12 PIES C26 GHT', price: 220.75, category: 'Laminas', searchableText: '' },
+            { id: 9004, code: '0301-020', description: 'POLIN C 4x2 CH16 GHT 6.0 MTS', price: 310.00, category: 'Polines', searchableText: '' }
         ];
 
         let allProducts = [];
@@ -1522,8 +1713,16 @@
         let currentQty = 1;
         let currentMeters = 1;
         let editingIndex = -1;
-        let currentMetersMode = 'total'; // 'total' or 'detail'
-        let currentPieces = []; // array of {qty, measure} for piece-by-piece mode
+        let currentMetersMode = 'total';
+        let currentPieces = [];
+
+        let OFFER_PRODUCT_CODES = new Set();
+        const RESTRICTED_CATEGORIES = new Set([
+            "ARQUITEJA", "ZINCALUM", "COLORALUM", "STARMAX", "TORNILLO", "CAPOTE", "CANAL",
+            "SELLADOR", "HIERRO G40", "ACCESORIOS HIERRO", "ELECTRODO", "AISLANTE TERMICO",
+            "CERRADURA", "TELA METALICA", "SUNLIGHT", "MISCELANEOS", "ACCESORIO THERMOTECHO BLANCO",
+            "ACCESORIO THERMOTECHO ROJO", "ACCESORIO THERMOTECHO VERDE", "ACCESORIO THERMOTECHO GRIS"
+        ].map(c => c.toUpperCase().trim()));
 
         function formatPrice(n) {
             const num = typeof n === 'number' ? n : parseFloat(String(n).replace(/[$,]/g, '').trim());
@@ -1555,6 +1754,63 @@
             copyToClipboard(el.querySelector('span:first-child').textContent, el);
         }
 
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        function cleanSearchText(text) {
+            if (!text) return '';
+            let cleaned = text.toLowerCase();
+            cleaned = cleaned.replace(/"/g, ' pulg ');
+            cleaned = cleaned.replace(/(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)/g, '$1 $2');
+            cleaned = cleaned.replace(/,/g, '.');
+            cleaned = cleaned.replace(/(\d)\.(\d)/g, '$1DECIMAL$2');
+            cleaned = cleaned.replace(/[.\/]/g, ' ');
+            cleaned = cleaned.replace(/DECIMAL/g, '.');
+            cleaned = cleaned.replace(/['*_-]/g, ' ');
+            cleaned = cleaned.replace(/\s+/g, ' ').trim();
+            return cleaned;
+        }
+
+        const filterAndRenderProducts = debounce(() => {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            let tempFiltered = allProducts;
+
+            if (searchTerm) {
+                const cleanedSearchTerm = cleanSearchText(searchTerm);
+                const keywords = cleanedSearchTerm.split(/\s+/).filter(k => k.length > 0);
+
+                if (keywords.length > 0) {
+                    tempFiltered = allProducts.filter(product => {
+                        const productText = product.searchableText;
+                        return keywords.every(keyword => {
+                            if (/^\d+(\.\d+)?$/.test(keyword)) {
+                                const regex = new RegExp(`\\b${keyword.replace('.', '\\.')}\\b`);
+                                return regex.test(productText);
+                            }
+                            return productText.includes(keyword);
+                        });
+                    });
+                }
+            }
+
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (searchTerm.length > 0) {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+
+            filteredProducts = tempFiltered;
+            renderProducts();
+        }, 300);
+
         async function loadProducts() {
             try {
                 const response = await fetch(SHEET_URL + '&t=' + Date.now());
@@ -1574,21 +1830,21 @@
                         return h.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
                     },
                     complete: function (results) {
-                        console.log('PapaParse rows:', results.data.length);
-                        if (results.data.length > 0) console.log('Headers:', Object.keys(results.data[0]));
-
+                        OFFER_PRODUCT_CODES.clear();
                         allProducts = results.data.map(function (p, i) {
-                            return {
+                            const prod = {
                                 id: i,
                                 code: (p.codigo || p.code || p.sku || '').trim(),
                                 description: (p.descripcion || p.desc || p.producto || p.nombre || '').trim(),
                                 price: parseFloat(String(p.precio || p.price || p.costo || 0).replace(/[$,]/g, '')) || 0,
                                 category: (p.categoria || p.category || p.tipo || 'Sin categoria').trim()
                             };
+                            prod.searchableText = cleanSearchText(prod.code + ' ' + prod.description + ' ' + prod.category);
+                            if (prod.category.toUpperCase() === 'OFERTA' && prod.code) {
+                                OFFER_PRODUCT_CODES.add(prod.code.toUpperCase().trim());
+                            }
+                            return prod;
                         }).filter(function (p) { return p.code || p.description; });
-
-                        console.log('Products loaded:', allProducts.length);
-                        if (allProducts.length > 0) console.log('First:', allProducts[0]);
 
                         filteredProducts = allProducts.slice();
                         renderProducts();
@@ -1602,10 +1858,11 @@
                 });
             } catch (err) {
                 console.error('Error cargando productos:', err);
-                // Usar productos de ejemplo como fallback
                 if (allProducts.length === 0) {
-                    console.warn('Usando productos de ejemplo como fallback');
-                    allProducts = FALLBACK_PRODUCTS.slice();
+                    allProducts = FALLBACK_PRODUCTS.map(p => {
+                        p.searchableText = cleanSearchText(p.code + ' ' + p.description + ' ' + p.category);
+                        return p;
+                    });
                     filteredProducts = allProducts.slice();
                     renderProducts();
                     updateListaUI();
@@ -1613,7 +1870,6 @@
                     document.getElementById('lastUpdate').textContent = '⚠ Modo ejemplo (sin conexión)';
                     showToast('Sin conexión: mostrando productos de ejemplo', 'warning');
                 } else {
-                    // Ya tiene productos cargados, solo avisar
                     showToast('Error actualizando: usando datos anteriores', 'warning');
                 }
             }
@@ -1644,17 +1900,24 @@
             }
             const headers = parseCSVLine(lines[0]).map(function (h) { return h.trim().toLowerCase().replace(/[\u0300-\u036f]/g, ''); });
             allProducts = [];
+            OFFER_PRODUCT_CODES.clear();
             for (let i = 1; i < lines.length; i++) {
                 const values = parseCSVLine(lines[i]);
                 const p = {};
                 headers.forEach(function (h, idx) { p[h] = values[idx] ? values[idx].trim() : ''; });
-                allProducts.push({
+
+                const prod = {
                     id: i - 1,
                     code: (p.codigo || p.code || p.sku || '').trim(),
                     description: (p.descripcion || p.desc || p.producto || p.nombre || '').trim(),
                     price: parseFloat(String(p.precio || p.price || p.costo || 0).replace(/[$,]/g, '')) || 0,
                     category: (p.categoria || p.category || p.tipo || 'Sin categoria').trim()
-                });
+                };
+                prod.searchableText = cleanSearchText(prod.code + ' ' + prod.description + ' ' + prod.category);
+                if (prod.category.toUpperCase() === 'OFERTA' && prod.code) {
+                    OFFER_PRODUCT_CODES.add(prod.code.toUpperCase().trim());
+                }
+                allProducts.push(prod);
             }
             allProducts = allProducts.filter(function (p) { return p.code || p.description; });
             filteredProducts = allProducts.slice();
@@ -1691,469 +1954,75 @@
             }).join('');
         }
 
-        var SEARCH_SYNONYMS = {
-            'polin': ['polin', 'polin c', 'polin encaj', 'viga', 'viga encaj', 'polin ght', 'polin gfx', '4x2'],
-            'viga': ['viga', 'viga encaj', 'polin encaj', 'polin', 'viga ght'],
-            'tubo': ['tubo', 'tubo est', 'tubo ind', 'tubo ght', 'tubo gfx', 'tubo hrc', 'tubo crc'],
-            'angulo': ['angulo', 'angulo ght', 'angulo g36'],
-            'platina': ['platina', 'platina ght', 'platina g36'],
-            'lamina': ['lam', 'lamina', 'lam ho', 'lam hierro', 'lamina sunlight'],
-            'hierro': ['hierro', 'hierro redondo', 'hierromax', 'ho', 'ho liso', 'ho corrugado', 'ho cuadrado'],
-            'hierromax': ['hierromax', 'hierro max', 'hierro', 'hierromax astm'],
-            'malla': ['malla', 'mallamax', 'malla max'],
-            'electrodo': ['electrodo', 'electrodo weldmax'],
-            'pintura': ['paint', 'pintura', 'esmalte', 'fast dry', 'maxpaint'],
-            'esmalte': ['esmalte', 'paint', 'pintura'],
-            'brocha': ['brocha'],
-            'tornillo': ['tornillo', 'tornillo autr'],
-            'grapa': ['grapa', 'grapa hierromax'],
-            'estribo': ['estribo', 'estribos'],
-            'grifa': ['grifa', 'grifa hierromax'],
-            'disco': ['disco', 'disco corte'],
-            'sierra': ['sierra', 'sierra acero'],
-            'alambre': ['alambre', 'alambre 16'],
-            'cerradura': ['cerradura', 'cerradura parche'],
-            'aislante': ['aislante', 'aislante terminco', 'prodex'],
-            'terminco': ['terminco', 'aislante', 'prodex', 'thermotechogfx', 'thermotecho'],
-            'thermotecho': ['thermotechogfx', 'thermotecho', 'terminco', 'aislante'],
-            'galvadeck': ['galvadeck', 'entrepiso', 'entrepiso galvadeck'],
-            'entrepiso': ['entrepiso', 'galvadeck', 'entrepiso galvadeck'],
-            'tela': ['tela', 'tela metalica', 'tela galva'],
-            'sunlight': ['sunlight', 'lamina sunlight'],
-            'remate': ['remate', 'remate lateral', 'remate inferior', 'remate superior'],
-            'botaguas': ['botaguas', 'botaguas lateral', 'botaguas fron'],
-            'cpte': ['cpte', 'componente', 'cpte thermotechogfx'],
-            'mda': ['mda', 'a medida'],
-            'g80': ['g80', 'galvanizado 80'],
-            'g65': ['g65', 'galvanizado 65'],
-            'g36': ['g36', 'galvanizado 36'],
-            'ght': ['ght'],
-            'hrc': ['hrc'],
-            'crc': ['crc'],
-            'gfx': ['gfx'],
-            'cuad': ['cuad', 'cuadrado'],
-            'rect': ['rect', 'rectangular'],
-            'redo': ['redo', 'redondo'],
-            'rec': ['rec', 'rect', 'rectangular'],
-            'electrosoldada': ['electrosoldada', 'electro'],
-            'lisa': ['lisa', 'liso'],
-            'crgdo': ['crgdo', 'corrugado'],
-            'corrugado': ['corrugado', 'crgdo'],
-            'liso': ['liso', 'lisa'],
-            'rojo': ['rojo', 'rjo'],
-            'blanco': ['blanco', 'blc'],
-            'negro': ['negro'],
-            'gris': ['gris'],
-            'verde': ['verde'],
-            'plateado': ['plateado'],
-            'aluminio': ['aluminio', 'alum'],
-            'encaj': ['encaj', 'encajable', 'encaje'],
-            'comercial': ['com', 'comercial'],
-            'original': ['orig', 'original'],
-            'chapa': ['ch', 'chapa'],
-            'calibre': ['calibre', '#'],
-            'corte': ['corte', 'corte metal'],
-            'metal': ['metal'],
-            'acero': ['acero'],
-            'galvanizado': ['galvanizado', 'galva', 'galvadeck'],
-            'puerta': ['pu', 'puerta'],
-            'yale': ['yale'],
-            'e40': ['e40'],
-            'e25': ['e25'],
-            'c22': ['c22'],
-            'c20': ['c20'],
-            'c26': ['c26'],
-            'c24': ['c24'],
-            'c12.5': ['c12.5'],
-            'c11': ['c11'],
-            'ch14': ['ch14', 'calibre 14'],
-            'ch16': ['ch16', 'calibre 16'],
-            'ch18': ['ch18', 'calibre 18'],
-            'ch22': ['ch22', 'calibre 22'],
-            '#16': ['#16', 'numero 16', '1.35mm'],
-            '#18': ['#18', 'numero 18', '1.00mm'],
-            '1.35': ['1.35', '1.35mm', '#16'],
-            '1.00': ['1.00', '1.00mm', '#18'],
-            '1.20': ['1.20', '1.2', '1.20mm', 'ch18'],
-            '1.50': ['1.50', '1.5', '1.50mm', 'ch16'],
-            '1.80': ['1.80', '1.8', '1.80mm', 'ch14'],
-            '2.30': ['2.30', '2.3', '2.30mm'],
-            '2.70': ['2.70', '2.7', '2.70mm'],
-            '3.20': ['3.20', '3.2', '3.20mm'],
-            '3.60': ['3.60', '3.6', '3.60mm'],
-            '4.0': ['4.0', '4.0mm', '4mm'],
-            '4.7': ['4.7', '4.7mm', '4.70mm'],
-            'd2': ['d2', '4.04mm', 'd4.04'],
-            'd3a': ['d3a', '4.60mm', 'd4.60'],
-            'd4': ['d4', '5.72mm', 'd5.72'],
-            'd6': ['d6', '7.01mm', 'd7.01'],
-            'd11': ['d11', '9.5mm', 'd9.5'],
-            'd17': ['d17', '11.81mm', 'd11.81'],
-            'd24': ['d24', '14.04mm', 'd14.04'],
-            '3/8': ['3/8', '9.5mm', '9.5'],
-            '1/2': ['1/2', '12.7mm', '12.7'],
-            '5/8': ['5/8', '15.8mm', '15.8'],
-            '3/4': ['3/4'],
-            '1': ['1', '1"', '1 pulgada'],
-            '1 1/4': ['1 1/4', '1-1/4', '1.25'],
-            '1 1/2': ['1 1/2', '1-1/2', '1.5'],
-            '2': ['2', '2"', '2 pulgadas'],
-            '3': ['3', '3"', '3 pulgadas'],
-            '4': ['4', '4"', '4 pulgadas'],
-            '6': ['6', '6"', '6 pulgadas'],
-            '8': ['8', '8"', '8 pulgadas'],
-            '10': ['10', '10"', '10 pulgadas'],
-            '12': ['12', '12"', '12 pulgadas'],
-            '14': ['14', '14"', '14 pulgadas'],
-            '15': ['15', '15"', '15 pulgadas'],
-            '1.315': ['1.315', '1.315"'],
-            '1.660': ['1.660', '1.660"'],
-            '1.900': ['1.900', '1.900"'],
-            '2.375': ['2.375', '2.375"'],
-            '3.800': ['3.800', '3.800"'],
-            'welding': ['weld', 'weldmax', 'welding'],
-            'maxpaint': ['maxpaint', 'paint'],
-            'fast dry': ['fast dry', 'maxpaint'],
-            'a plus': ['a plus', 'a+', 'autr a plus'],
-            'autr': ['autr', 'autorroscante', 'tornillo autr'],
-            'perfil': ['perfil', 'perfil arquiteja'],
-            'arquiteja': ['arquiteja', 'perfil arquiteja'],
-            'espuma': ['espuma', 'sellador espuma'],
-            'sellador': ['sellador', 'sellador espuma'],
-            'eclipse': ['eclipse'],
-            'dronco': ['dronco'],
-            'villa': ['villa', 'vll'],
-            'vll': ['vll', 'villa'],
-            'com': ['com', 'comercial'],
-            'orig': ['orig', 'original'],
-            'mda': ['mda', 'a medida'],
-            'liso': ['liso', 'lisa'],
-            'corrugado': ['corrugado', 'crgdo'],
-            'cuadrado': ['cuadrado', 'cuad'],
-            'rectangular': ['rectangular', 'rect', 'rec'],
-            'redondo': ['redondo', 'redo'],
-            'electro': ['electro', 'electrosoldada'],
-            'p-63': ['p-63', 'p63'],
-            '10/10': ['10/10', '3.43mm'],
-            '6/6': ['6/6', '4.88mm'],
-            '4/4': ['4/4', '5.72mm'],
-            '9/9': ['9/9', '3.80mm'],
-            '3.43': ['3.43', '3.43mm', '10/10'],
-            '4.88': ['4.88', '4.88mm', '6/6'],
-            '5.72': ['5.72', '5.72mm', '4/4'],
-            '3.80': ['3.80', '3.80mm', '9/9'],
-            '6013': ['6013'],
-            '2.5': ['2.5', '2.5mm', '3/32'],
-            '3.2': ['3.2', '3.2mm', '1/8'],
-            '5.5': ['5.5', '5.5 lb'],
-            '11': ['11', '11 lb'],
-            '10mm': ['10mm', '10 mm'],
-            '5mm': ['5mm', '5 mm'],
-            '1.15': ['1.15', '1.15x30m'],
-            '30m': ['30m', '1.15x30m'],
-            'ff': ['ff'],
-            'derecha': ['derecha', 'drch', 'dch'],
-            'izquierda': ['izquierda', 'iqda', 'izq'],
-            'drch': ['drch', 'derecha'],
-            'iqda': ['iqda', 'izquierda'],
-            'c12.5': ['c12.5', '2.50mm'],
-            'c11': ['c11', '3.06mm'],
-            '2.50': ['2.50', '2.50mm', 'c12.5'],
-            '3.06': ['3.06', '3.06mm', 'c11'],
-            '30yd': ['30yd', '30 yardas', 'x30yd'],
-            '10 pie': ['10 pie', '10 pies'],
-            '12 pie': ['12 pie', '12 pies'],
-            '6.0': ['6.0', '6.0 mts', '6 metros'],
-            '4.0': ['4.0', '4.0 mts', '4 metros'],
-            '6 mts': ['6 mts', '6.0 mts', '6 metros'],
-            '4 mts': ['4 mts', '4.0 mts', '4 metros'],
-            '2.25': ['2.25', '2.25m', '2.25 m'],
-            '3m': ['3m', '3 m', '3 metros'],
-            '0.24': ['0.24', '0.24x3m', '0.24x2.25m'],
-            '0.80': ['0.80', '0.80mm', '0.8'],
-            '0.8': ['0.8', '0.80', '0.80mm'],
-            '0.4': ['0.4', '0.40'],
-            '0.3': ['0.3', '0.30'],
-            '0.55': ['0.55', '0.55/0.3'],
-            '5/16': ['5/16'],
-            '4 1/2': ['4 1/2', '4.5', '4-1/2'],
-            '5 1/2': ['5 1/2', '5.5', '5-1/2'],
-            'rojo oxido': ['rojo oxido', 'rojo oxido'],
-            'rojo': ['rojo', 'rjo'],
-            'blanco': ['blanco', 'blc'],
-            'mad': ['mad', 'madera'],
-            'madera': ['madera', 'mad'],
-            'pu': ['pu', 'puerta'],
-            'pdo': ['pdo', 'pintado'],
-            'pintado': ['pintado', 'pdo'],
-            'a medida': ['a medida', 'mda'],
-            'comercial': ['comercial', 'com'],
-            'astm': ['astm', 'astm a1064'],
-            'a1064': ['a1064', 'astm a1064'],
-            'g75': ['g75', 'grado 75'],
-            'g40': ['g40', 'grado 40'],
-            'grado 75': ['grado 75', 'g75'],
-            'grado 40': ['grado 40', 'g40'],
-            'grado 80': ['grado 80', 'g80'],
-            'grado 65': ['grado 65', 'g65'],
-            'grado 36': ['grado 36', 'g36'],
-            'chapa 14': ['chapa 14', 'ch14', 'calibre 14'],
-            'chapa 16': ['chapa 16', 'ch16', 'calibre 16'],
-            'chapa 18': ['chapa 18', 'ch18', 'calibre 18'],
-            'chapa 22': ['chapa 22', 'ch22', 'calibre 22'],
-            'calibre 14': ['calibre 14', 'ch14', 'chapa 14'],
-            'calibre 16': ['calibre 16', 'ch16', 'chapa 16'],
-            'calibre 18': ['calibre 18', 'ch18', 'chapa 18'],
-            'calibre 22': ['calibre 22', 'ch22', 'chapa 22'],
-            'numero 16': ['numero 16', '#16'],
-            'numero 18': ['numero 18', '#18'],
-            '1/16': ['1/16', '1.35mm', '1.50mm'],
-            '1/8': ['1/8', '3.17mm'],
-            '3/16': ['3/16', '4.7mm', '4.70mm'],
-            '1/4': ['1/4', '6.0mm', '6.35mm'],
-            '5/32': ['5/32'],
-            '7/64': ['7/64'],
-            '9/64': ['9/64'],
-            '3/32': ['3/32'],
-            '5/64': ['5/64'],
-            '1/32': ['1/32', '0.60mm', '0.6mm'],
-            '3/64': ['3/64', '0.90mm', '0.9mm', '1.00mm'],
-            '1.9': ['1.9', '1.90', '1.90mm'],
-            '2.3': ['2.3', '2.30', '2.30mm'],
-            '2.7': ['2.7', '2.70', '2.70mm'],
-            '3.2': ['3.2', '3.20', '3.20mm'],
-            '3.6': ['3.6', '3.60', '3.60mm'],
-            '4.0': ['4.0', '4.0mm', '4mm'],
-            '4.7': ['4.7', '4.7mm', '4.70mm'],
-            '6.0': ['6.0', '6.0mm', '6mm'],
-            '8.0': ['8.0', '8.0mm', '8mm'],
-            '9.5': ['9.5', '9.5mm'],
-            '11.0': ['11.0', '11.0mm', '11mm'],
-            '12.7': ['12.7', '12.7mm'],
-            '15.8': ['15.8', '15.8mm'],
-            '4x2': ['4x2', '4 x 2', '4"x2"', '4\'\'x2\'\''],
-            '4x4': ['4x4', '4 x 4'],
-            '6x2': ['6x2', '6 x 2'],
-            '6x4': ['6x4', '6 x 4'],
-            '8x6': ['8x6', '8 x 6'],
-            '10x6': ['10x6', '10 x 6', '10"x6"'],
-            '10x3': ['10x3', '10 x 3'],
-            '12x7': ['12x7', '12 x 7'],
-            '12x3.5': ['12x3.5', '12 x 3-1/2', '12"x3-1/2"'],
-            '14x8': ['14x8', '14 x 8'],
-            '14x4': ['14x4', '14 x 4'],
-            '15x8': ['15x8', '15 x 8'],
-            '15x4': ['15x4', '15 x 4'],
-            '3x2': ['3x2', '3 x 2'],
-            '2x1': ['2x1', '2 x 1'],
-            '4x1': ['4x1', '4 x 1'],
-            '3/4x1/2': ['3/4x1/2', '3/4"x1/2"'],
-            '1x1/2': ['1x1/2', '1"x1/2"'],
-            '1x5/64': ['1x5/64', '1"x5/64"'],
-            '1x3/32': ['1x3/32', '1"x3/32"'],
-            '1x7/64': ['1x7/64', '1"x7/64"'],
-            '1x1/8': ['1x1/8', '1"x1/8"'],
-            '1-1/4x5/64': ['1-1/4x5/64', '1-1/4"x5/64"'],
-            '1-1/4x3/32': ['1-1/4x3/32', '1-1/4"x3/32"'],
-            '1-1/2x3/32': ['1-1/2x3/32', '1-1/2"x3/32"'],
-            '1-1/2x7/64': ['1-1/2x7/64', '1-1/2"x7/64"'],
-            '2x3/32': ['2x3/32', '2"x3/32"'],
-            '2x7/64': ['2x7/64', '2"x7/64"'],
-            '2x1/8': ['2x1/8', '2"x1/8"'],
-            '3x1/8': ['3x1/8', '3"x1/8"'],
-            '3x7/64': ['3x7/64', '3"x7/64"'],
-            '4x1/8': ['4x1/8', '4"x1/8"'],
-            '4x7/64': ['4x7/64', '4"x7/64"'],
-            '4x9/64': ['4x9/64', '4"x9/64"'],
-            '1/2x5/64': ['1/2x5/64', '1/2"x5/64"'],
-            '1/2x3/32': ['1/2x3/32', '1/2"x3/32"'],
-            '1-1/2x3/32': ['1-1/2x3/32', '1-1/2"x3/32"'],
-            '1x1/4': ['1x1/4', '1"x1/4"'],
-            '2x1m': ['2x1m', '2 x 1 m'],
-            '10x10': ['10x10', '10x10cm'],
-            '10x20': ['10x20', '10x20cm'],
-            '10 cm': ['10 cm', '10cm', '10x10', '10x20'],
-            '20 cm': ['20 cm', '20cm', '10x20'],
-            '4.04': ['4.04', '4.04mm', 'd2'],
-            '4.60': ['4.60', '4.60mm', 'd3a'],
-            '5.72': ['5.72', '5.72mm', 'd4'],
-            '7.01': ['7.01', '7.01mm', 'd6'],
-            '9.5': ['9.5', '9.5mm', 'd11'],
-            '11.81': ['11.81', '11.81mm', 'd17'],
-            '14.04': ['14.04', '14.04mm', 'd24'],
-            '26.10': ['26.10', '$26.10'],
-            '33.56': ['33.56', '$33.56'],
-            '36.23': ['36.23', '$36.23'],
-            '38.06': ['38.06', '$38.06'],
-            '36.84': ['36.84', '$36.84'],
-            '42.02': ['42.02', '$42.02'],
-            '49.20': ['49.20', '$49.20'],
-            '49.90': ['49.90', '$49.90'],
-            '48.65': ['48.65', '$48.65'],
-            '6.59': ['6.59', '$6.59'],
-            '13.18': ['13.18', '$13.18'],
-            '30 un': ['30 un', '30 unidades'],
-            '14 un': ['14 un', '14 unidades'],
-            '8 un': ['8 un', '8 unidades'],
-            '5 un': ['5 un', '5 unidades'],
-            '5,5 lb': ['5,5 lb', '5.5 lb'],
-            '11 lb': ['11 lb', '11lb'],
-            'weldmax': ['weldmax', 'welding'],
-            'prodex': ['prodex', 'aislante terminco'],
-            'mallamax': ['mallamax', 'malla max', 'malla'],
-            'malla max': ['malla max', 'mallamax', 'malla'],
-            'hierro max': ['hierro max', 'hierromax', 'hierro'],
-            'galva deck': ['galva deck', 'galvadeck', 'entrepiso'],
-            'sun light': ['sun light', 'sunlight', 'lamina sunlight'],
-            'arquiteja': ['arquiteja', 'arquitectura', 'perfil arquiteja'],
-            'a+': ['a+', 'a plus'],
-            'autr': ['autr', 'autorroscante'],
-            'rjo': ['rjo', 'rojo'],
-            'blc': ['blc', 'blanco'],
-            'pdo': ['pdo', 'pintado'],
-            'pu': ['pu', 'puerta'],
-            'drch': ['drch', 'derecha'],
-            'iqda': ['iqda', 'izquierda'],
-            'ff': ['ff']
-        };
-
-        function normalizeText(text) {
-            if (!text) return '';
-            return text.toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                .replace(/[''"`´]/g, "'")
-                .replace(/(\d)['"]?\s*x\s*['"]?(\d)/g, '$1x$2')
-                .replace(/(\d)['"]/g, '$1')
-                .replace(/(\d)\s*-\s*(\d)/g, '$1-$2')
-                .replace(/\s+/g, ' ')
-                .trim();
-        }
-
-        function getRelatedTerms(token) {
-            var normToken = normalizeText(token);
-            var related = [normToken];
-
-            for (var key in SEARCH_SYNONYMS) {
-                var synonyms = SEARCH_SYNONYMS[key];
-                var normKey = normalizeText(key);
-
-                if (normKey === normToken) {
-                    for (var i = 0; i < synonyms.length; i++) {
-                        var s = normalizeText(synonyms[i]);
-                        if (related.indexOf(s) === -1) related.push(s);
-                    }
-                    return related;
-                }
-
-                for (var j = 0; j < synonyms.length; j++) {
-                    if (normalizeText(synonyms[j]) === normToken) {
-                        if (related.indexOf(normKey) === -1) related.push(normKey);
-                        for (var k = 0; k < synonyms.length; k++) {
-                            var s2 = normalizeText(synonyms[k]);
-                            if (related.indexOf(s2) === -1) related.push(s2);
-                        }
-                        return related;
-                    }
-                }
-            }
-
-            return related;
-        }
-
-        function getSearchTokens(query) {
-            var normalized = normalizeText(query);
-            var rawTokens = normalized.split(/\s+/).filter(function (t) { return t.length > 0; });
-
-            var tokenGroups = [];
-            rawTokens.forEach(function (token) {
-                tokenGroups.push(getRelatedTerms(token));
-            });
-
-            return tokenGroups;
-        }
-
-        function productMatches(product, tokenGroups) {
-            var codeNorm = normalizeText(product.code);
-            var descNorm = normalizeText(product.description);
-            var catNorm = normalizeText(product.category);
-            var fullText = codeNorm + ' ' + descNorm + ' ' + catNorm;
-
-            return tokenGroups.every(function (group) {
-                return group.some(function (token) {
-                    if (!token) return false;
-
-                    if (fullText.includes(token)) return true;
-
-                    var noHyphen = token.replace(/-/g, ' ');
-                    if (noHyphen !== token && fullText.includes(noHyphen)) return true;
-
-                    var withHyphen = token.replace(/\s+/g, '-');
-                    if (withHyphen !== token && fullText.includes(withHyphen)) return true;
-
-                    return false;
-                });
-            });
-        }
-
-        function scoreProduct(product, tokenGroups) {
-            var score = 0;
-            var codeNorm = normalizeText(product.code);
-            var descNorm = normalizeText(product.description);
-            var catNorm = normalizeText(product.category);
-
-            tokenGroups.forEach(function (group) {
-                group.forEach(function (token) {
-                    if (!token) return;
-
-                    if (codeNorm === token) score += 1000;
-                    else if (codeNorm.startsWith(token + ' ') || codeNorm.startsWith(token + '-')) score += 500;
-                    else if (codeNorm.includes(token)) score += 300;
-
-                    if (descNorm.startsWith(token + ' ')) score += 400;
-                    else if (descNorm.includes(' ' + token + ' ')) score += 250;
-                    else if (descNorm.includes(token)) score += 100;
-
-                    if (catNorm === token) score += 200;
-                    else if (catNorm.includes(token)) score += 80;
-
-                    try {
-                        var wordBound = new RegExp('\\b' + token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
-                        if (wordBound.test(descNorm)) score += 50;
-                    } catch (e) { }
-                });
-            });
-
-            return score;
-        }
-
-        document.getElementById('searchInput').addEventListener('input', function (e) {
-            var rawQuery = e.target.value.trim();
-
-            if (!rawQuery) {
-                filteredProducts = allProducts.slice();
-                renderProducts();
-                return;
-            }
-
-            var tokenGroups = getSearchTokens(rawQuery);
-
-            if (tokenGroups.length === 0) {
-                filteredProducts = allProducts.slice();
-                renderProducts();
-                return;
-            }
-
-            var matches = allProducts.filter(function (p) {
-                return productMatches(p, tokenGroups);
-            });
-
-            matches.sort(function (a, b) {
-                return scoreProduct(b, tokenGroups) - scoreProduct(a, tokenGroups);
-            });
-
-            filteredProducts = matches;
-            renderProducts();
+        document.getElementById('searchInput').addEventListener('input', filterAndRenderProducts);
+        document.getElementById('clearSearchBtn').addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            filterAndRenderProducts();
+            document.getElementById('searchInput').focus();
         });
+
+        function getPriceModalContentHTML(product) {
+            const numericBasePrice = parseFloat(product.price);
+            const normalizedCategory = product.category ? product.category.toUpperCase().trim() : 'N/A';
+            const normalizedProductCode = product.code ? product.code.toUpperCase().trim() : '';
+
+            const isOffer = OFFER_PRODUCT_CODES.has(normalizedProductCode);
+            const isRestrictedCategory = RESTRICTED_CATEGORIES.has(normalizedCategory);
+
+            let availableDiscounts = [];
+            let policyMessage = '';
+
+            if (isOffer) {
+                availableDiscounts = [
+                    { percent: 0, label: '0% - Oferta', colorClass: 'bg-red' }
+                ];
+                policyMessage = `<p class="offer-warning"><span class="font-extrabold">¡Producto en OFERTA!</span> Este producto está en OFERTA y, por lo tanto, no aplica a ningún descuento adicional.</p>`;
+            } else if (isRestrictedCategory) {
+                availableDiscounts = [
+                    { percent: 3, label: '3%', colorClass: 'bg-yellow' }
+                ];
+                policyMessage = `<p class="restricted-warning"><span class="font-extrabold">¡ATENCIÓN!</span> Descuento restringido al 3% por política de precios.</p>`;
+            } else {
+                availableDiscounts = [
+                    { percent: 3, label: '3%', colorClass: 'bg-yellow' },
+                    { percent: 4, label: '4%', colorClass: 'bg-green' },
+                    { percent: 5, label: '5%', colorClass: 'bg-indigo' }
+                ];
+            }
+
+            let html = policyMessage;
+            html += `<div>`;
+
+            availableDiscounts.forEach(({ percent, label, colorClass }) => {
+                const finalPrice = numericBasePrice * (1 - (percent / 100));
+                const formattedPrice = formatPrice(finalPrice);
+                html += `
+                    <div class="discount-row ${colorClass}">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="label">${percent}%</span>
+                            <span class="sublabel">${label}</span>
+                        </div>
+                        <span class="price">${formattedPrice}</span>
+                    </div>
+                `;
+            });
+
+            if (!isOffer) {
+                const formattedBasePrice = formatPrice(numericBasePrice);
+                html += `
+                    <div class="discount-row bg-gray">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="label">Normal</span>
+                            <span class="sublabel">Precio de Lista</span>
+                        </div>
+                        <span class="price">${formattedBasePrice}</span>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            return html;
+        }
 
         function openPriceModal(id) {
             const p = allProducts.find(function (x) { return x.id === id; });
@@ -2161,20 +2030,59 @@
             document.getElementById('priceModalTitle').textContent = p.description || 'Producto';
             document.getElementById('priceModalCodeText').textContent = p.code || 'SIN CODIGO';
             document.getElementById('priceModalDesc').textContent = p.description || 'Sin descripcion';
-            document.getElementById('viewPrice0').textContent = formatPrice(p.price);
-            document.getElementById('viewOrig3').textContent = formatPrice(p.price);
-            document.getElementById('viewPrice3').textContent = formatPrice(p.price * 0.97);
-            document.getElementById('viewOrig4').textContent = formatPrice(p.price);
-            document.getElementById('viewPrice4').textContent = formatPrice(p.price * 0.96);
-            document.getElementById('viewOrig5').textContent = formatPrice(p.price);
-            document.getElementById('viewPrice5').textContent = formatPrice(p.price * 0.95);
+
+            document.getElementById('priceModalContent').innerHTML = getPriceModalContentHTML(p);
+
             document.getElementById('priceModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
+
         function closePriceModal(e) {
             if (e && e.target !== e.currentTarget) return;
             document.getElementById('priceModal').classList.remove('active');
             document.body.style.overflow = '';
+        }
+
+        function applyDiscountPolicy(p) {
+            const normalizedCat = p.category ? p.category.toUpperCase().trim() : 'N/A';
+            const normalizedCode = p.code ? p.code.toUpperCase().trim() : '';
+            const isOffer = OFFER_PRODUCT_CODES.has(normalizedCode);
+            const isRestricted = RESTRICTED_CATEGORIES.has(normalizedCat);
+
+            const warningEl = document.getElementById('discountPolicyWarning');
+            let warningHtml = '';
+
+            const opt0 = document.querySelector('.discount-option[data-discount="0"]');
+            const opt3 = document.querySelector('.discount-option[data-discount="3"]');
+            const opt4 = document.querySelector('.discount-option[data-discount="4"]');
+            const opt5 = document.querySelector('.discount-option[data-discount="5"]');
+
+            opt0.style.display = 'flex';
+            opt3.style.display = 'flex';
+            opt4.style.display = 'flex';
+            opt5.style.display = 'flex';
+            opt0.className = 'discount-option bg-gray';
+            opt3.className = 'discount-option bg-yellow';
+            opt4.className = 'discount-option bg-green';
+            opt5.className = 'discount-option bg-indigo';
+            opt0.querySelector('.opt-pct').textContent = '-';
+
+            if (isOffer) {
+                warningHtml = `<div class="offer-warning" style="margin-bottom: 16px;">¡Producto en OFERTA! No aplica ningún descuento adicional.</div>`;
+                opt3.style.display = 'none';
+                opt4.style.display = 'none';
+                opt5.style.display = 'none';
+                opt0.className = 'discount-option bg-red';
+                opt0.querySelector('.opt-pct').innerHTML = '0%';
+                selectDiscount(0);
+            } else if (isRestricted) {
+                warningHtml = `<div class="restricted-warning" style="margin-bottom: 16px;">¡ATENCIÓN! Descuento restringido al 3% por política de precios.</div>`;
+                opt4.style.display = 'none';
+                opt5.style.display = 'none';
+                selectDiscount(3);
+            }
+
+            warningEl.innerHTML = warningHtml;
         }
 
         function openDiscountModal(id) {
@@ -2198,6 +2106,7 @@
             document.getElementById('discountModalTitle').textContent = 'Agregar al Carrito';
             currentPieces = [];
             setupModalContent(p, isMeters, 0, 1, 1, null);
+            applyDiscountPolicy(p);
 
             document.getElementById('discountModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2223,6 +2132,7 @@
             document.getElementById('discountModalTitle').textContent = 'Editar Carrito';
             currentPieces = item.pieces ? item.pieces.slice() : [];
             setupModalContent(p, isMeters, item.discount, item.qty || 1, item.meters || 1, item.pieces || null);
+            applyDiscountPolicy(p);
 
             document.getElementById('discountModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2257,6 +2167,8 @@
             document.getElementById('quantitySection').style.display = 'none';
             document.getElementById('metersSection').style.display = 'none';
 
+            applyDiscountPolicy(p);
+
             document.getElementById('discountModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2289,6 +2201,8 @@
             document.getElementById('quantitySection').style.display = 'none';
             document.getElementById('metersSection').style.display = 'none';
 
+            applyDiscountPolicy(p);
+
             document.getElementById('discountModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2304,7 +2218,8 @@
             document.getElementById('optOrig5').textContent = formatPrice(p.price);
             document.getElementById('optPrice5').textContent = formatPrice(p.price * 0.95);
             document.querySelectorAll('.discount-option').forEach(function (el) { el.classList.remove('selected'); });
-            document.querySelector('.discount-option[data-discount="' + discount + '"]').classList.add('selected');
+            const opt = document.querySelector('.discount-option[data-discount="' + discount + '"]');
+            if (opt) opt.classList.add('selected');
 
             document.getElementById('quantitySection').style.display = isMeters ? 'none' : 'block';
             document.getElementById('metersSection').style.display = isMeters ? 'block' : 'none';
@@ -2315,7 +2230,6 @@
                 updateQtySubtotal();
             }
             if (isMeters) {
-                // Determine mode from existing data
                 if (pieces && pieces.length > 0) {
                     currentPieces = pieces.map(function (pc) { return { qty: pc.qty, measure: pc.measure }; });
                     currentMetersMode = 'detail';
@@ -2336,7 +2250,8 @@
         function selectDiscount(d) {
             selectedDiscount = d;
             document.querySelectorAll('.discount-option').forEach(function (el) { el.classList.remove('selected'); });
-            document.querySelector('.discount-option[data-discount="' + d + '"]').classList.add('selected');
+            const opt = document.querySelector('.discount-option[data-discount="' + d + '"]');
+            if (opt) opt.classList.add('selected');
             updateQtySubtotal();
             updateMetersSubtotal();
         }
@@ -2349,10 +2264,11 @@
 
         function updateQtySubtotal() {
             const input = document.getElementById('qtyInput');
-            let val = parseInt(input.value) || 1;
-            if (val < 1) val = 1;
+            let val = parseInt(input.value);
+            if (isNaN(val) || val < 1) {
+                val = 1;
+            }
             currentQty = val;
-            input.value = val;
 
             if (currentDiscountProduct) {
                 const unitPrice = currentDiscountProduct.price * (1 - selectedDiscount / 100);
@@ -2363,12 +2279,12 @@
         function updateMetersSubtotal() {
             if (currentMetersMode === 'total') {
                 const input = document.getElementById('metersInput');
-                let val = parseFloat(input.value) || 0;
-                if (val <= 0) val = 0.01;
+                let val = parseFloat(input.value);
+                if (isNaN(val) || val <= 0) {
+                    val = 0.01;
+                }
                 currentMeters = val;
-                input.value = val;
             }
-            // In detail mode, currentMeters is set by recalcPiecesTotal
 
             if (currentDiscountProduct) {
                 const unitPrice = currentDiscountProduct.price * (1 - selectedDiscount / 100);
@@ -2376,7 +2292,6 @@
             }
         }
 
-        // ====== METERS MODE FUNCTIONS ======
         function setMetersMode(mode) {
             currentMetersMode = mode;
             document.getElementById('metersModeTotal').classList.toggle('active', mode === 'total');
@@ -2391,7 +2306,6 @@
                 renderPiecesTable();
                 recalcPiecesTotal();
             } else {
-                // Switching to total: if we had pieces, sum them as starting value
                 if (currentPieces.length > 0) {
                     var total = 0;
                     currentPieces.forEach(function (pc) { total += (pc.qty || 1) * (pc.measure || 0); });
@@ -2408,7 +2322,6 @@
             currentPieces.push({ qty: 1, measure: 0 });
             renderPiecesTable();
             recalcPiecesTotal();
-            // Scroll to bottom and focus the new measure input
             var container = document.getElementById('piecesContainer');
             setTimeout(function () {
                 container.scrollTop = container.scrollHeight;
@@ -2425,12 +2338,15 @@
 
         function updatePieceValue(index, field, value) {
             if (field === 'qty') {
-                currentPieces[index].qty = Math.max(1, parseInt(value) || 1);
+                let val = parseInt(value);
+                if (isNaN(val) || val < 1) val = 1;
+                currentPieces[index].qty = val;
             } else {
-                currentPieces[index].measure = Math.max(0, parseFloat(value) || 0);
+                let val = parseFloat(value);
+                if (isNaN(val) || val < 0) val = 0;
+                currentPieces[index].measure = val;
             }
             recalcPiecesTotal();
-            // Update the subtotal cell for this row
             var sub = (currentPieces[index].qty || 1) * (currentPieces[index].measure || 0);
             var subCell = document.getElementById('pieceRowSub_' + index);
             if (subCell) subCell.textContent = sub > 0 ? sub.toFixed(2) : '-';
@@ -2489,13 +2405,24 @@
                 finalPrice = unitPrice;
             } else {
                 if (!isMeters) {
+                    let inputVal = parseInt(document.getElementById('qtyInput').value);
+                    if (isNaN(inputVal) || inputVal < 1) inputVal = 1;
+                    document.getElementById('qtyInput').value = inputVal;
+                    currentQty = inputVal;
+
                     qty = currentQty;
                     finalPrice = unitPrice * qty;
                 } else {
+                    if (currentMetersMode === 'total') {
+                        let inputVal = parseFloat(document.getElementById('metersInput').value);
+                        if (isNaN(inputVal) || inputVal <= 0) inputVal = 0.01;
+                        document.getElementById('metersInput').value = inputVal;
+                        currentMeters = inputVal;
+                    }
+
                     meters = currentMeters;
                     finalPrice = unitPrice * meters;
                     qty = meters;
-                    // Save pieces if in detail mode
                     if (currentMetersMode === 'detail' && currentPieces.length > 0) {
                         pieces = currentPieces.filter(function (pc) { return pc.measure > 0; }).map(function (pc) {
                             return { qty: pc.qty, measure: pc.measure };
@@ -2636,12 +2563,12 @@
           ${isQty ? `
           <div class="cart-qty-controls">
             <button class="cart-qty-btn" onclick="event.stopPropagation(); updateCartQty(${i}, -1)">&#8722;</button>
-            <input type="number" class="cart-qty-value" value="${item.qty}" min="1" onchange="event.stopPropagation(); setCartQty(${i}, this.value)">
+            <input type="number" class="cart-qty-value" value="${item.qty}" min="1" onfocus="this.select();" onchange="event.stopPropagation(); setCartQty(${i}, this.value)">
             <button class="cart-qty-btn" onclick="event.stopPropagation(); updateCartQty(${i}, 1)">+</button>
           </div>` : ''}
           ${isMeters ? `
           <div class="cart-qty-controls" style="width:100px;">
-            <input type="number" class="cart-qty-value" value="${item.meters}" min="0.01" step="0.01" style="width:100%;" onchange="event.stopPropagation(); setCartMeters(${i}, this.value)">
+            <input type="number" class="cart-qty-value" value="${item.meters}" min="0.01" step="0.01" style="width:100%;" onfocus="this.select();" onchange="event.stopPropagation(); setCartMeters(${i}, this.value)">
           </div>` : ''}
           <button class="sidebar-item-remove" onclick="event.stopPropagation(); removeFromCarrito(${i})">&#128465;</button>
         </div>
@@ -2664,8 +2591,8 @@
         function setCartQty(index, value) {
             const item = carrito[index];
             if (!item) return;
-            let val = parseInt(value) || 1;
-            if (val < 1) val = 1;
+            let val = parseInt(value);
+            if (isNaN(val) || val < 1) val = 1;
             item.qty = val;
             item.finalPrice = item.unitPrice * item.qty;
             saveData(); updateCarritoUI();
@@ -2674,8 +2601,8 @@
         function setCartMeters(index, value) {
             const item = carrito[index];
             if (!item) return;
-            let val = parseFloat(value) || 0.01;
-            if (val <= 0) val = 0.01;
+            let val = parseFloat(value);
+            if (isNaN(val) || val <= 0) val = 0.01;
             item.meters = val;
             item.qty = val;
             item.finalPrice = item.unitPrice * val;
@@ -2721,7 +2648,6 @@
                 const isQty = !isMeters;
 
                 msg += (i + 1) + '. *' + (item.code || 'SIN CODIGO') + '* — ' + (item.description || 'Sin descripcion') + '\n';
-                // Solo muestra el precio final, sin descuento ni precio original
                 msg += '   *' + formatPrice(item.unitPrice) + '*\n';
                 if (isMeters) {
                     msg += '   ' + item.meters + ' metros = *' + formatPrice(item.finalPrice) + '*\n';
@@ -2805,7 +2731,6 @@
             }
             document.getElementById('pdfDataModal').classList.add('active');
             document.body.style.overflow = 'hidden';
-            // Guardar referencia del sidebar abierto para cerrarlo después
             pdfSidebarWasOpen = openSidebarType;
         }
 
@@ -2829,20 +2754,18 @@
             closePdfDataModal();
 
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ unit: 'mm', format: 'letter' }); // 216 x 279 mm
+            const doc = new jsPDF({ unit: 'mm', format: 'letter' });
 
-            const pageW = doc.internal.pageSize.getWidth(); // 216
-            const pageH = doc.internal.pageSize.getHeight(); // 279
+            const pageW = doc.internal.pageSize.getWidth();
+            const pageH = doc.internal.pageSize.getHeight();
             const margin = 15;
 
-            // ===== LOGO =====
             try {
                 const logoImg = await loadImage('https://files.kimi.moonshot.cn/upload/image/1749603485420-3f8c9e5c-1f5e-4c5e-8b5e-9c8e5c5e5c5e.png');
                 const logoW = 55;
                 const logoH = (logoImg.height / logoImg.width) * logoW;
                 doc.addImage(logoImg.data, 'PNG', margin, 10, logoW, logoH);
             } catch (e) {
-                // Fallback texto si no carga el logo
                 doc.setFontSize(22);
                 doc.setTextColor(220, 20, 20);
                 doc.setFont('helvetica', 'bold');
@@ -2852,7 +2775,6 @@
                 doc.text('#1 en hierro y techos', margin, 25);
             }
 
-            // ===== DATOS EMPRESA (centro-derecha) =====
             doc.setFontSize(8);
             doc.setFont('helvetica', 'normal');
             doc.setTextColor(60, 60, 60);
@@ -2864,14 +2786,12 @@
             doc.text('EMAIL: slb.gerencia@galvanissa.com', empresaX, empresaY + 12);
             doc.text('www.galvanissa.com', empresaX, empresaY + 16);
 
-            // ===== GIRO =====
             doc.setFontSize(8);
             doc.setTextColor(80, 80, 80);
             doc.text('GIRO:', empresaX, empresaY + 22);
             doc.text('FABRICACION DE PRODUCTOS METALICOS', empresaX, empresaY + 26);
             doc.text('PARA USO ESTRUCTURAL', empresaX, empresaY + 30);
 
-            // ===== CAJA COTIZACION =====
             const cajaX = 155;
             const cajaY = 10;
             const cajaW = 50;
@@ -2888,7 +2808,6 @@
             const numCotiz = 'No. ' + generarNumeroCotizacion();
             doc.text(numCotiz, cajaX + cajaW / 2, cajaY + 18, { align: 'center' });
 
-            // ===== TEXTO ADVERTENCIA (arriba de todo) =====
             const advY = 48;
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(12);
@@ -2896,7 +2815,6 @@
             doc.text('COTIZACION CON PRECIOS APROXIMADOS, TOTAL FINAL PUEDE VARIAR EN TIENDA', margin, advY);
             doc.setTextColor(0, 0, 0);
 
-            // ===== DATOS CLIENTE / FECHA =====
             const datosY = 56;
             doc.setFontSize(9);
             doc.setFont('helvetica', 'bold');
@@ -2921,7 +2839,6 @@
             doc.setFont('helvetica', 'normal');
             doc.text(asesor, 170, datosY + 6);
 
-            // ===== TABLA DE PRODUCTOS =====
             const tablaY = 70;
 
             const tableData = carrito.map(function (item) {
@@ -2984,9 +2901,8 @@
 
             const finalY = doc.lastAutoTable.finalY + 5;
 
-            // ===== TOTALES (alineado con la tabla) =====
-            const tablaRight = 206; // Borde derecho de la tabla (216 - 10 margen)
-            const totalesW = 55;      // Ancho del bloque de totales
+            const tablaRight = 206;
+            const totalesW = 55;
 
             doc.setFontSize(9);
             doc.setFont('helvetica', 'bold');
@@ -2999,7 +2915,6 @@
             doc.setFont('helvetica', 'normal');
             doc.text('US$ ' + formatPrice(retencion).replace('$', ''), tablaRight, finalY + 6, { align: 'right' });
 
-            // Línea separadora
             doc.setDrawColor(0);
             doc.setLineWidth(0.5);
             doc.line(tablaRight - totalesW, finalY + 9, tablaRight, finalY + 9);
@@ -3009,7 +2924,6 @@
             doc.text('TOTAL', tablaRight - totalesW, finalY + 16);
             doc.text('US$ ' + formatPrice(totalFinal).replace('$', ''), tablaRight, finalY + 16, { align: 'right' });
 
-            // ===== CONDICIONES =====
             const condY = finalY + 30;
             doc.setFontSize(8);
             doc.setFont('helvetica', 'bold');
@@ -3020,12 +2934,10 @@
             doc.setFont('helvetica', 'bold');
             doc.text('PRECIOS SUJETOS A CAMBIO SIN PREVIO AVISO', pageW / 2, condY + 18, { align: 'center' });
 
-            // ===== FIRMAS =====
             const firmasY = condY + 32;
             const firmaW = 55;
             const espacio = (pageW - 20 - firmaW * 3) / 2;
 
-            // Líneas de firma
             doc.setDrawColor(0);
             doc.setLineWidth(0.3);
             doc.line(10, firmasY, 10 + firmaW, firmasY);
@@ -3044,7 +2956,6 @@
             doc.text('Aceptado Cliente', margin + firmaW + espacio + firmaW / 2, firmasY + 5, { align: 'center' });
             doc.text('Autorizado', margin + firmaW * 2 + espacio * 2 + firmaW / 2, firmasY + 5, { align: 'center' });
 
-            // ===== MARCA DE AGUA =====
             doc.setTextColor(200, 200, 200);
             doc.setFontSize(40);
             doc.setFont('helvetica', 'bold');
@@ -3056,11 +2967,101 @@
             });
             doc.restoreGraphicsState();
 
-            // Guardar
+            // ==============================================================
+            // ANEXO DE MEDIDAS (SEGUNDA HOJA)
+            // ==============================================================
+            const hasPieces = carrito.some(item => item.pieces && item.pieces.length > 0);
+
+            if (hasPieces) {
+                doc.addPage();
+                let annexY = 20;
+
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(0, 0, 0);
+                doc.text('ANEXO DE MEDIDAS', pageW / 2, annexY, { align: 'center' });
+                annexY += 8;
+
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(100, 100, 100);
+                doc.text('Cotizacion No. ' + generarNumeroCotizacion() + ' | Cliente: ' + cliente, pageW / 2, annexY, { align: 'center' });
+                annexY += 10;
+
+                carrito.forEach(item => {
+                    if (item.pieces && item.pieces.length > 0) {
+
+                        // Si estamos muy al fondo de la página, añadimos otra
+                        if (annexY > 250) {
+                            doc.addPage();
+                            annexY = 20;
+                        }
+
+                        // Título del producto en el anexo
+                        doc.setFontSize(11);
+                        doc.setFont('helvetica', 'bold');
+                        doc.setTextColor(0, 0, 0);
+                        const splitDesc = doc.splitTextToSize(item.description || 'Sin descripcion', pageW - margin * 2);
+                        doc.text(splitDesc, margin, annexY);
+                        annexY += (splitDesc.length * 5) + 2;
+
+                        doc.setFontSize(9);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setTextColor(60, 60, 60);
+                        doc.text(`Total de metros: ${item.meters.toFixed(2)} m`, margin, annexY);
+                        annexY += 5;
+
+                        // Ordenar piezas de mayor a menor medida
+                        const sortedPieces = [...item.pieces].sort((a, b) => (b.measure || 0) - (a.measure || 0));
+
+                        const piecesTableData = sortedPieces.map(pc => {
+                            const sub = (pc.qty || 1) * (pc.measure || 0);
+                            return [
+                                pc.qty.toString(),
+                                `${(pc.measure || 0).toFixed(2)} m`,
+                                `${sub.toFixed(2)} m`
+                            ];
+                        });
+
+                        // Fila de total
+                        piecesTableData.push([
+                            '',
+                            { content: 'Total:', styles: { halign: 'right', fontStyle: 'bold' } },
+                            { content: `${item.meters.toFixed(2)} m`, styles: { fontStyle: 'bold' } }
+                        ]);
+
+                        doc.autoTable({
+                            startY: annexY,
+                            margin: { left: margin, right: margin },
+                            head: [['CANTIDAD', 'MEDIDA', 'SUBTOTAL']],
+                            body: piecesTableData,
+                            theme: 'grid',
+                            headStyles: {
+                                fillColor: [240, 240, 240],
+                                textColor: [0, 0, 0],
+                                fontStyle: 'bold',
+                                fontSize: 8
+                            },
+                            bodyStyles: {
+                                fontSize: 9,
+                                textColor: [0, 0, 0]
+                            },
+                            columnStyles: {
+                                0: { halign: 'center', cellWidth: 40 },
+                                1: { halign: 'center', cellWidth: 40 },
+                                2: { halign: 'right', cellWidth: 40 }
+                            }
+                        });
+
+                        annexY = doc.lastAutoTable.finalY + 15;
+                    }
+                });
+            }
+            // ==============================================================
+
             doc.save('Cotizacion_' + cliente.replace(/\s+/g, '_') + '_' + fechaHoy.replace(/\//g, '-') + '.pdf');
             showToast('Cotización PDF generada', 'success');
 
-            // Cerrar sidebar si estaba abierto
             if (pdfSidebarWasOpen) {
                 closeSidebar(pdfSidebarWasOpen);
                 pdfSidebarWasOpen = null;
